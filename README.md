@@ -1,0 +1,1 @@
+jwt Auth & Google Auth for  customers and Restaurants Admin, food menu pages,profile page,cart page,suggestions of dishes should be shown,  search food based on tags. for payment, use some kind of virtual money transaction system for now.
