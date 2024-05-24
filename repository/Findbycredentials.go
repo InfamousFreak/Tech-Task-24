@@ -14,7 +14,7 @@ func Findbycredentials(email, password string) (*models.User, error) {
 			ID:       1,
 			Email:    "test@gmail.com",
 			Password: "test12345",
-			Country:  "India",
+			City:     "Bhubaneshwar",
 		}, nil
 	}
 	return nil, errors.New("user not found")

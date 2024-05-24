@@ -13,5 +13,5 @@ type User struct {
 	ID       int
 	Email    string
 	Password string
-	Country  string
+	City     string
 }

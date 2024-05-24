@@ -16,23 +16,23 @@ func Login(c *fiber.Ctx) error {
 	loginRequest := new(models.LoginRequest)
 	if err := c.BodyParser(loginRequest); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": err.Error(),
+			"error": err.Error(), //This part parses the request body into a LoginRequest struct. If parsing fails, it returns a 400 Bad Request status with the error message.
 		})
 	}
 	// Find the user by credentials
 	user, err := repository.Findbycredentials(loginRequest.Email, loginRequest.Password)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": err.Error(),
+			"error": err.Error(), //This part calls a repository function Findbycredentials to verify the user's email and password. If the credentials are incorrect, it returns a 401 Unauthorized status with the error message.
 		})
 	}
-	day := time.Hour * 24
+	day := time.Hour * 24 //expiry time of 24 hours declaring a variable day
 	// Create the JWT claims, which includes the user ID and expiry time
 	claims := jtoken.MapClaims{
-		"ID":      user.ID,
-		"email":   user.Email,
-		"country": user.Country,
-		"exp":     time.Now().Add(day * 1).Unix(),
+		"ID":    user.ID,
+		"email": user.Email,
+		"city":  user.City,
+		"exp":   time.Now().Add(day * 1).Unix(),
 	}
 	// Create token
 	token := jtoken.NewWithClaims(jtoken.SigningMethodHS256, claims)
@@ -40,10 +40,10 @@ func Login(c *fiber.Ctx) error {
 	t, err := token.SignedString([]byte(config.Secret))
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
+			"error": err.Error(), //This part creates a new JWT token with the specified claims and signs it using a secret key from the configuration. If signing fails, it returns a 500 Internal Server Error status with the error message.
 		})
 	}
-	// Return the token
+	// Return the JWT token in the response body
 	return c.JSON(models.LoginResponse{
 		Token: t,
 	})
@@ -55,6 +55,6 @@ func Protected(c *fiber.Ctx) error {
 	user := c.Locals("user").(*jtoken.Token)
 	claims := user.Claims.(jtoken.MapClaims)
 	email := claims["email"].(string)
-	favPhrase := claims["fav"].(string)
-	return c.SendString("Welcome 👋" + email + " " + favPhrase)
+	city := claims["city"].(string)
+	return c.SendString("Welcome 👋" + email + " " + city)
 }
