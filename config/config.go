@@ -13,26 +13,26 @@ import (
 const Secret = "secret"
 
 type Config struct {
-	GoogleLoginConfig oauth2.Config
+	GoogleLoginConfig oauth2.Config //defines a struct named config with a field googleloginconfig of type oauth2.config
 	//GitHubLoginConfig oauth2.Config
 }
 
-var AppConfig Config
+var AppConfig Config //global variable of type config
 
-func GoogleConfig() oauth2.Config {
-	err := godotenv.Load(".env")
+func GoogleConfig() oauth2.Config { //function googleconfig returns a struct oauth2.config
+	err := godotenv.Load(".env") //loads up the .env file
 	if err != nil {
-		log.Fatalf("Some error occured. Err: %s", err)
+		log.Fatalf("Some error occured. Err: %s", err) //if there is some error in loading the env file then it stops executing the program
 	}
 
-	AppConfig.GoogleLoginConfig = oauth2.Config{
-		RedirectURL:  "http://localhost:8080/google_callback",
+	AppConfig.GoogleLoginConfig = oauth2.Config{ //field and struct
+		RedirectURL:  "http://localhost:8080/google_callback", //redirect the user to the given url
 		ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
-		Scopes: []string{"https://www.googleapis.com/auth/userinfo.email",
+		Scopes: []string{"https://www.googleapis.com/auth/userinfo.email", //bunch of scope requests from the users the email and profile of the user
 			"https://www.googleapis.com/auth/userinfo.profile"},
-		Endpoint: google.Endpoint,
+		Endpoint: google.Endpoint, //google's default endpoint
 	}
 
-	return AppConfig.GoogleLoginConfig
+	return AppConfig.GoogleLoginConfig //returns the struct
 }
