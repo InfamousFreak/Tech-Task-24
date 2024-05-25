@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/InfamousFreak/Tech-Task-24/config"
-	"github.com/InfamousFreak/Tech-Task-24/controllers"
 	"github.com/InfamousFreak/Tech-Task-24/handlers"
 	"github.com/InfamousFreak/Tech-Task-24/middlewares"
 	"github.com/gofiber/fiber/v2"
@@ -15,10 +14,8 @@ func main() {
 	config.GoogleConfig()
 	//config.GithubConfig()
 
-	app.Get("/google_login", controllers.GoogleLogin)
-	/*app.Get("/google_callback", controllers.GoogleCallback)
-	app.Get("/github_login", controllers.GithubLogin)
-	app.Get("/github_callback", controllers.GithubCallback)*/
+	app.Get("/google_login", handlers.GoogleLogin)
+	app.Post("/google_callback", handlers.GoogleCallback)
 	//app := fiber.New()
 
 	// Create a new JWT middleware
