@@ -17,13 +17,13 @@ func GetCartItems(c *fiber.Ctx) error {
 }
 
 func AddToCart(c *fiber.Ctx) error {
-	var item models.CartItem
-	if err := c.BodyParser(&item); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	var item models.CartItem                    //variable item with type models.cartitem (presumably defines the structure of a cart item (e.g., it might include fields such as ProductID, Quantity, etc.).)
+	if err := c.BodyParser(&item); err != nil { //BodyParser method of the Fiber context tries to read the JSON payload from the request body and unmarshal it into the item variable
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()}) //if error then sets status bad request and json response with single key "error" and err.Error() as its value
 	}
 	result := database.DB.Create(&item)
 	if result.Error != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": result.Error.Error()})
 	}
-	return c.Status(fiber.StatusCreated).JSON(item)
+	return c.Status(fiber.StatusCreated).JSON(item) // sends a json response of the items created
 }
