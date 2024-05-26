@@ -7,7 +7,7 @@ import (
 )
 
 // simulate a database call
-func Findbycredentials(email, password string) (*models.User, error) {
+func Findbycredentials(email, password string) (*models.User, error) { //a function that takes email and password as string as arguments, and returns a pointer to models.User and error which will be nil if no user is found
 	//here you would query your database for the user with the given email
 	if email == "test@gmail.com" && password == "test12345" {
 		return &models.User{
