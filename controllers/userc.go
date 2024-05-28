@@ -1,4 +1,4 @@
-package handlers
+package controllers
 
 import (
 	"github.com/InfamousFreak/Tech-Task-24/database"
@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetUserProfile(c *fiber.Ctx) error {
+func CreateUserProfile(c *fiber.Ctx) error {
 	userID := c.Params("id")
 	var user models.UserProfile
 	result := database.DB.First(&user, userID) //retrieves the first user that matches the stored user profiles
