@@ -1,4 +1,4 @@
-package controllers
+package handlers
 
 import (
 	"github.com/InfamousFreak/Tech-Task-24/database"

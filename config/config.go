@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -9,15 +10,25 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
+func Config(key string) string {
+	//load .env file
+	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Print("Error loading .env file")
+	}
+	//return the value of the variable
+	return os.Getenv(key)
+}
+
 // secret key used to sign the JWT, this must be a secure key and should not be stored in the code
 const Secret = "secret"
 
-type Config struct {
+type GConfig struct {
 	GoogleLoginConfig oauth2.Config //defines a struct named config with a field googleloginconfig of type oauth2.config
 	//GitHubLoginConfig oauth2.Config
 }
 
-var AppConfig Config //global variable of type config
+var AppConfig GConfig //global variable of type config
 
 func GoogleConfig() oauth2.Config { //function googleconfig returns a struct oauth2.config
 	err := godotenv.Load(".env") //loads up the .env file

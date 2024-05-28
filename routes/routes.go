@@ -1,21 +1,21 @@
-package controllers
+package handlers
 
 import (
-	"github.com/InfamousFreak/Tech-Task-24/controllers"
+	"github.com/InfamousFreak/Tech-Task-24/handlers"
 	"github.com/gofiber/fiber/v2"
 )
 
 func SetupRouter(app *fiber.App) {
-	app.Get("/menu", controllers.GetMenuItems)
-	app.Post("/menu", controllers.CreateMenuItem)
-	app.Get("/menu/search", controllers.SearchMenuItemsByTags) //new search route for tags
+	app.Get("/menu", handlers.GetMenuItems)
+	app.Post("/menu", handlers.CreateMenuItem)
+	app.Get("/menu/search", handlers.SearchMenuItemsByTags) //new search route for tags
 
-	app.Get("/profile/:id", controllers.GetUserProfile)
-	app.Get("/profile/:id", controllers.UpdateUserProfile)
+	app.Get("/profile/:id", handlers.GetUserProfile)
+	app.Get("/profile/:id", handlers.UpdateUserProfile)
 
-	app.Get("/cart", controllers.AddToCart)
-	app.Get("/cart/:user_id", controllers.GetCartItems)
+	app.Get("/cart", handlers.AddToCart)
+	app.Get("/cart/:user_id", handlers.GetCartItems)
 
-	app.Get("/suggestions", controllers.GetSuggestions)
+	app.Get("/suggestions", handlers.GetSuggestions)
 
 }

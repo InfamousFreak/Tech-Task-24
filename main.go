@@ -11,11 +11,17 @@ func main() {
 
 	app := fiber.New()
 
+	//send a string back for GET CALLS to the endpoint "/"
+	app.Get("/", func(c *fiber.Ctx) error {
+		err := c.SendString("And the API is UP!")
+		return err
+	})
+
 	config.GoogleConfig()
 	//config.GithubConfig()
 
 	app.Get("/google_login", handlers.GoogleLogin)
-	app.Post("/google_callback", handlers.GoogleCallback)
+	app.Get("/google_callback", handlers.GoogleCallback)
 	//app := fiber.New()
 
 	// Create a new JWT middleware
