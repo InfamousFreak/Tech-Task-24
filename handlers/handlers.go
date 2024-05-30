@@ -23,7 +23,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 	// Find the user by credentials
-	user, err := repository.Findbycredentials(loginRequest.Email, loginRequest.Password) //interacts with a repository to find a user based on their email and password
+	user, err := repository.Find(loginRequest.Email, loginRequest.Password) //interacts with a repository to find a user based on their email and password
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error": err.Error(), //This part calls a repository function Findbycredentials to verify the user's email and password. If the credentials are incorrect, it returns a 401 Unauthorized status with the error message.
