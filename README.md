@@ -1,1 +1,18 @@
-jwt Auth & Google Auth for  customers and Restaurants Admin, food menu pages,profile page,cart page,suggestions of dishes should be shown,  search food based on tags. for payment, use some kind of virtual money transaction system for now.
+# Food_Delivery_Website
+
+
+
+
+## Stack_used
+
+Backend - Golang; GORM; GOFiber
+
+
+## Features
+
+- JWT Auth, Google Auth for customers and Restaurants Admins
+- Food menu pages
+- Profile page, cart page
+- Suggestions of dishes will be shown
+- Food to be searched based on tags
+- Payment gateway integration (virtual for now)
