@@ -85,7 +85,7 @@ func CreateUserProfile(c *fiber.Ctx) error {
 
 func UpdateUserProfile(c *fiber.Ctx) error {
 	var newUser models.UserProfile
-	userID := database.Convert(c.Params("user_id"))
+	userID := database.Convert(c.Params("id"))
 	fmt.Println(userID)
 	if err := c.BodyParser(&newUser); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"Error": err.Error()})
@@ -93,12 +93,12 @@ func UpdateUserProfile(c *fiber.Ctx) error {
 	newUser.UserID = userID
 	var existingUser models.UserProfile
 
-	if err := database.Db.First(&existingUser, "user_id=?", userID).Error; err != nil {
+	if err := database.Db.First(&existingUser, "id=?", userID).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{"Error": err.Error})
 	}
 	database.Db.First(&existingUser, userID)
 
-	if err := database.Db.First(&existingUser, "user_id=?", userID).Error; err != nil {
+	if err := database.Db.First(&existingUser, "id=?", userID).Error; err != nil {
 		result := database.Db.Create(&newUser)
 		if result.Error != nil {
 			c.Status(400).JSON(&fiber.Map{"error": result.Error.Error()})
@@ -120,10 +120,10 @@ func UpdateUserProfile(c *fiber.Ctx) error {
 }
 
 func DeleteUserProfile(c *fiber.Ctx) error {
-    userID := database.Convert(c.Params("user_id"))
+    userID := database.Convert(c.Params("id"))
 
     var existingUser models.UserProfile
-    if err := database.Db.First(&existingUser, "user_id=?", userID).Error; err != nil {
+    if err := database.Db.First(&existingUser, "id=?", userID).Error; err != nil {
         return c.Status(404).JSON(fiber.Map{"error": "User not found"})
     }
 

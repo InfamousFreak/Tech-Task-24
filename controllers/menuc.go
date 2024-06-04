@@ -50,7 +50,7 @@ func SearchMenuItemsByName(c *fiber.Ctx) error {
     }
 
     var items []models.MenuItem
-    result := database.Db.Where("name ILIKE ?", "%"+name+"%").Find(&items)
+    result := database.Db.Where("name LIKE ?", "%"+name+"%").Find(&items)
     if result.Error != nil {
         return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": result.Error.Error()})
     }
