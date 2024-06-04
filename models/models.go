@@ -8,3 +8,13 @@ type LoginRequest struct {
 type LoginResponse struct {
 	Token string `json:"token"`
 }
+<<<<<<< HEAD
+=======
+
+type User struct {
+	ID       int
+	Email    string
+	Password string
+	City     string
+}
+>>>>>>> origin/master
