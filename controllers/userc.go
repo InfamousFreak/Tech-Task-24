@@ -84,39 +84,39 @@ func CreateUserProfile(c *fiber.Ctx) error {
 }*/
 
 func UpdateUserProfile(c *fiber.Ctx) error {
-	var newUser models.UserProfile
-	userID := database.Convert(c.Params("id"))
-	fmt.Println(userID)
-	if err := c.BodyParser(&newUser); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"Error": err.Error()})
-	}
-	newUser.UserID = userID
-	var existingUser models.UserProfile
+    var newUser models.UserProfile
+    userID := database.Convert(c.Params("id"))
+    fmt.Println(userID)
 
-	if err := database.Db.First(&existingUser, "id=?", userID).Error; err != nil {
-		return c.Status(400).JSON(fiber.Map{"Error": err.Error})
-	}
-	database.Db.First(&existingUser, userID)
+    if err := c.BodyParser(&newUser); err != nil {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"Error": err.Error()})
+    }
 
-	if err := database.Db.First(&existingUser, "id=?", userID).Error; err != nil {
-		result := database.Db.Create(&newUser)
-		if result.Error != nil {
-			c.Status(400).JSON(&fiber.Map{"error": result.Error.Error()})
-		}
+    newUser.ID = userID // Update this line to use ID instead of UserID
 
-	} else {
-		result := database.Db.Model(&existingUser).Updates(newUser)
-		if result.Error != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": result.Error.Error()})
-		}
-	}
+    var existingUser models.UserProfile
+    if err := database.Db.First(&existingUser, "id=?", userID).Error; err != nil {
+        return c.Status(400).JSON(fiber.Map{"Error": err.Error})
+    }
 
-	return c.Status(200).JSON(&fiber.Map{
-		"data":    newUser,
-		"success": true,
-		"message": "Updated Successfully",
-	})
+    database.Db.First(&existingUser, userID)
+    if err := database.Db.First(&existingUser, "id=?", userID).Error; err != nil { // Update this line to use ID instead of user_id
+        result := database.Db.Create(&newUser)
+        if result.Error != nil {
+            c.Status(400).JSON(&fiber.Map{"error": result.Error.Error()})
+        }
+    } else {
+        result := database.Db.Model(&existingUser).Updates(newUser)
+        if result.Error != nil {
+            return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": result.Error.Error()})
+        }
+    }
 
+    return c.Status(200).JSON(&fiber.Map{
+        "data":    newUser,
+        "success": true,
+        "message": "Updated Successfully",
+    })
 }
 
 func DeleteUserProfile(c *fiber.Ctx) error {
@@ -139,6 +139,22 @@ func DeleteUserProfile(c *fiber.Ctx) error {
     return c.Status(200).JSON(fiber.Map{
         "success": true,
         "message": "User deleted successfully",
+    })
+}
+
+func ShowProfiles(c *fiber.Ctx) error {
+    var users []models.UserProfile
+
+    // Query the database for all user profiles
+    result := database.Db.Find(&users)
+    if result.Error != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": result.Error.Error()})
+    }
+
+    return c.Status(fiber.StatusOK).JSON(&fiber.Map{
+        "data":    users,
+        "success": true,
+        "message": "Retrieved Successfully",
     })
 }
 
