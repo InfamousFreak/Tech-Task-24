@@ -26,11 +26,11 @@ func Login(c *fiber.Ctx) error {
 	user, err := repository.Find(loginRequest.Email, loginRequest.Password) //interacts with a repository to find a user based on their email and password
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": err.Error(), //This part calls a repository function Findbycredentials to verify the user's email and password. If the credentials are incorrect, it returns a 401 Unauthorized status with the error message.
+			"error": err.Error(), //This part calls a repository function Find to verify the user's email and password. If the credentials are incorrect, it returns a 401 Unauthorized status with the error message.
 		})
 	}
 	day := time.Hour * 24 //expiry time of 24 hours declaring a variable day
-	// Create the JWT claims, which includes the user ID and expiry time
+	// Create the JWT claims, which includes the user ID and expiry time	
 	claims := jtoken.MapClaims{
 		"ID":    user.ID,
 		"email": user.Email,

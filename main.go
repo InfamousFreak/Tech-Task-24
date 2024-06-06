@@ -7,6 +7,8 @@ import (
 	"github.com/InfamousFreak/Tech-Task-24/middlewares"
 	"github.com/InfamousFreak/Tech-Task-24/routes"
 	"github.com/gofiber/fiber/v2"
+	"fmt"
+	"github.com/InfamousFreak/Tech-Task-24/passwordhashing"
 )
 
 func main() {
@@ -21,6 +23,18 @@ func main() {
 		err := c.SendString("And the API is UP!")
 		return err
 	})
+//bcrypt password hash prompt
+	var password string
+    fmt.Printf("Please Enter your password : ")
+    fmt.Scanln(&password)
+
+    hash, _ := passwordhashing.HashPassword(password)
+
+    fmt.Println("Password:", password)
+    fmt.Println("Hash:    ", hash)
+
+    match := passwordhashing.VerifyPassword(password, hash)
+    fmt.Println("Match:   ", match)
 
 	jwt := middlewares.NewAuthMiddleware(config.Secret)
 	config.GoogleConfig()

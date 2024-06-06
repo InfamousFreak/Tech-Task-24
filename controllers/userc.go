@@ -142,19 +142,5 @@ func DeleteUserProfile(c *fiber.Ctx) error {
     })
 }
 
-func ShowProfiles(c *fiber.Ctx) error {
-    var users []models.UserProfile
 
-    // Query the database for all user profiles
-    result := database.Db.Find(&users)
-    if result.Error != nil {
-        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": result.Error.Error()})
-    }
-
-    return c.Status(fiber.StatusOK).JSON(&fiber.Map{
-        "data":    users,
-        "success": true,
-        "message": "Retrieved Successfully",
-    })
-}
 
