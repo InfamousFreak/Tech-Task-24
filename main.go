@@ -7,8 +7,7 @@ import (
 	"github.com/InfamousFreak/Tech-Task-24/middlewares"
 	"github.com/InfamousFreak/Tech-Task-24/routes"
 	"github.com/gofiber/fiber/v2"
-	"fmt"
-	"github.com/InfamousFreak/Tech-Task-24/passwordhashing"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func main() {
@@ -24,7 +23,7 @@ func main() {
 		return err
 	})
 //bcrypt password hash prompt
-	var password string
+	/*var password string
     fmt.Printf("Please Enter your password : ")
     fmt.Scanln(&password)
 
@@ -34,7 +33,12 @@ func main() {
     fmt.Println("Hash:    ", hash)
 
     match := passwordhashing.VerifyPassword(password, hash)
-    fmt.Println("Match:   ", match)
+    fmt.Println("Match:   ", match)*/
+
+	app.Use(cors.New(cors.Config{
+        AllowOrigins: "http://127.0.0.1:5501", // Replace with your frontend URL
+        AllowHeaders: "Origin, Content-Type, Accept",
+    }))
 
 	jwt := middlewares.NewAuthMiddleware(config.Secret)
 	config.GoogleConfig()

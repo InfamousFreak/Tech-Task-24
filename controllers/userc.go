@@ -6,6 +6,7 @@ import (
 	"github.com/InfamousFreak/Tech-Task-24/database"
 	"github.com/InfamousFreak/Tech-Task-24/models"
 	"github.com/gofiber/fiber/v2"
+	"github.com/InfamousFreak/Tech-Task-24/passwordhashing"
 )
 
 func CreateUserProfile(c *fiber.Ctx) error {
@@ -13,6 +14,12 @@ func CreateUserProfile(c *fiber.Ctx) error {
 	if err := c.BodyParser(newUser); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"Error": err.Error()})
 	}
+	hashedPassword, err := passwordhashing.HashPassword(newUser.Password)
+    if err != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"Error": "Failed to hash password"})
+    }
+    newUser.Password = hashedPassword
+
 	createResult := database.Db.Create(&newUser)
 	if createResult.Error != nil {
 		c.Status(400).JSON(&fiber.Map{"error": createResult.Error.Error()})
@@ -52,6 +59,7 @@ func CreateUserProfile(c *fiber.Ctx) error {
 			"Error": err.Error(),
 		})
 	}
+	newUser.Password, =hashpassword.HashPassword(newUser.Password)
 	result := database.Db.Create(&newUser)
 	//database.Db.Create(&newUser)
 	if result.Error != nil {
@@ -69,6 +77,20 @@ func CreateUserProfile(c *fiber.Ctx) error {
 		"message": "Successfully registered",
 	})
 	return nil
+	day:=time.Hour*24;
+	claims:=jtoken.MapClaims{
+		"ID": newUser.ID,
+		"email":newUser.Email,
+		"expi":time.Now().Add(day*1).Unix(),
+	}
+	token:=jtoken.NewWithClaims(jtoken.SigningMethodHS256,claims)
+	t,err:=token.SignedString([]byte(config.Secret))
+	if err != nil{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error":err.Error(),})
+	}
+	return c.JSON(models.LoginResponse{
+		Token:t,
+	})
 }*/
 
 /*func UpdateUserProfile(c *fiber.Ctx) error {

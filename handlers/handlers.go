@@ -11,6 +11,8 @@ import (
 	"github.com/InfamousFreak/Tech-Task-24/repository"
 	"github.com/gofiber/fiber/v2"
 	jtoken "github.com/golang-jwt/jwt/v4"
+	//"github.com/InfamousFreak/Tech-Task-24/passwordhashing"
+	"github.com/InfamousFreak/Tech-Task-24/database"
 )
 
 // Login route
@@ -29,21 +31,30 @@ func Login(c *fiber.Ctx) error {
 			"error": err.Error(), //This part calls a repository function Find to verify the user's email and password. If the credentials are incorrect, it returns a 401 Unauthorized status with the error message.
 		})
 	}
-	day := time.Hour * 24 //expiry time of 24 hours declaring a variable day
-	// Create the JWT claims, which includes the user ID and expiry time	
+	//var user models.UserProfile
+    if err := database.Db.Where("email = ?", loginRequest.Email).First(&user).Error; err != nil {
+        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid email or password"})
+    }
+
+    // Compare the provided password with the stored hashed password
+    //if err := passwordhashing.CompareHashAndPassword(loginRequest.Password, user.Password); err != nil {
+        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid email or password"})
+    	
+
+	day := time.Hour * 24 
 	claims := jtoken.MapClaims{
 		"ID":    user.ID,
 		"email": user.Email,
 		"city":  user.City,
-		"exp":   time.Now().Add(day * 1).Unix(), //the unix method converts the time.Time to a unix timestamp, 1970, the unix epoch
+		"exp":   time.Now().Add(day * 1).Unix(),
 	}
-	// Create token
-	token := jtoken.NewWithClaims(jtoken.SigningMethodHS256, claims) //newwithclaims ia a jwt library method
-	// Generate encoded token and send it as response.
-	t, err := token.SignedString([]byte(config.Secret)) //signedstring is a speciall jwt function that signs the token using special secret key, and []byte converts the secret key into a byte slice which is the required format for signedstring
-	if err != nil {                                     //t is the signed jwt key for succesful operation
+	
+	token := jtoken.NewWithClaims(jtoken.SigningMethodHS256, claims) 
+	
+	t, err := token.SignedString([]byte(config.Secret))
+	if err != nil {                                     
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(), //This part creates a new JWT token with the specified claims and signs it using a secret key from the configuration. If signing fails, it returns a 500 Internal Server Error status with the error message.
+			"error": err.Error(),
 		})
 	}
 	// Return the JWT token in the response body
@@ -63,12 +74,8 @@ func Protected(c *fiber.Ctx) error {
 }
 
 func GoogleLogin(c *fiber.Ctx) error {
-
-	url := config.AppConfig.GoogleLoginConfig.AuthCodeURL("randomstate")
-
-	c.Status(fiber.StatusSeeOther)
-	c.Redirect(url)
-	return c.JSON(url)
+    url := config.AppConfig.GoogleLoginConfig.AuthCodeURL("randomstate")
+    return c.Redirect(url, fiber.StatusTemporaryRedirect)
 }
 
 func GoogleCallback(c *fiber.Ctx) error {
