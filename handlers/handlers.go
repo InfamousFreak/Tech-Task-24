@@ -18,20 +18,20 @@ import (
 // Login route
 func Login(c *fiber.Ctx) error {
 	// Extract the credentials from the request body
-	loginRequest := new(models.LoginRequest) //new is a go operation that allocates memory for the variable and returns a pointer to it
+	loginRequest := new(models.LoginRequest) 
 	if err := c.BodyParser(loginRequest); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": err.Error(), //This part parses the request body into a LoginRequest struct. If parsing fails, it returns a 400 Bad Request status with the error message.
+			"error": err.Error(), 
 		})
 	}
 	// Find the user by credentials
-	user, err := repository.Find(loginRequest.Email, loginRequest.Password) //interacts with a repository to find a user based on their email and password
+	user, err := repository.Find(loginRequest.Email, loginRequest.Password) 
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": err.Error(), //This part calls a repository function Find to verify the user's email and password. If the credentials are incorrect, it returns a 401 Unauthorized status with the error message.
+			"error": err.Error(), 
 		})
 	}
-	//var user models.UserProfile
+
     if err := database.Db.Where("email = ?", loginRequest.Email).First(&user).Error; err != nil {
         return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid email or password"})
     }
@@ -63,6 +63,7 @@ func Login(c *fiber.Ctx) error {
 	})
 }
 
+
 // Protected route
 func Protected(c *fiber.Ctx) error {
 	// Get the user from the context and return it
@@ -77,6 +78,7 @@ func GoogleLogin(c *fiber.Ctx) error {
     url := config.AppConfig.GoogleLoginConfig.AuthCodeURL("randomstate")
     return c.Redirect(url, fiber.StatusTemporaryRedirect)
 }
+
 
 func GoogleCallback(c *fiber.Ctx) error {
 	state := c.Query("state")

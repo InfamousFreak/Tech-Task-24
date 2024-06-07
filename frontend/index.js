@@ -79,25 +79,52 @@ document.getElementById('signup-buttom').addEventListener('click', async functio
 	
 	});
 
-	async function GoogleAuthURL() {
-		try {
-			const response = await fetch('http://localhost:8080/google_login');
-			if (response.ok) {
-				const data = await response.json();
-				return data.authURL;
-			} else {
-				console.error ('Failed to get Google Authentication URL');
-			}
-		} catch (error) {
-			console.error ('Network error:', error);
+/*async function GoogleAuthURL() {
+	try {
+		const response = await fetch('http://localhost:8080/google_login');
+		if (response.ok) {
+			const data = await response.json();
+			return data.authURL;
+		} else {
+			console.error ('Failed to get Google Authentication URL');
 		}
+	} catch (error) {
+				console.error ('Network error:', error);
 	}
+}
 
 	document.getElementById('google-authBtn').onclick = async function () {
 		const authURL = await GoogleAuthURL();
 		if (authURL) {
-			window.location.href = authURL;
+			window.location.href = 'http://localhost:8080/google_login';
 		} else {
 			console.error('Failed to get Google authentication URL');
 		}
-	};
+	};*/
+
+	function handleGoogleSignIn() {
+		google.accounts.id.initialize({
+			client_id: '569178294581-8o8bk3geh4velg2tioj5bk615faeo74g.apps.googleusercontent.com',
+			callback: handleCredentialResponse
+		});
+
+		google.accounts.id.prompt();
+	}
+
+	function handleCredentialResponse(response) {
+		fetch('/google_login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ token: response.credential })
+		}).then(response => {
+			if (response.ok) {
+				console.log('User signed in successfully');
+			} else {
+				console.log('Failed to sign in user');
+			}
+		}).catch(error => {
+			console.error('Error during sign-in', error);
+		});
+	}

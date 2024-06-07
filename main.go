@@ -37,7 +37,8 @@ func main() {
 
 	app.Use(cors.New(cors.Config{
         AllowOrigins: "http://127.0.0.1:5501", // Replace with your frontend URL
-        AllowHeaders: "Origin, Content-Type, Accept",
+        AllowHeaders: "Origin, Content-Type, Accept, Authorization",
+		AllowMethods: "GET ,POST ,PUT ,DELETE ,HEAD ,PATCH",
     }))
 
 	jwt := middlewares.NewAuthMiddleware(config.Secret)
