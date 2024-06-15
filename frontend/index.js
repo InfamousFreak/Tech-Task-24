@@ -11,7 +11,7 @@ $(window).on("hashchange", function () {
 });
 $(window).trigger("hashchange");
 
-/*function validateLoginForm() {
+function validateLoginForm() {
 	var name = document.getElementById("logName").value;
 	var password = document.getElementById("logPassword").value;
 
@@ -28,7 +28,8 @@ $(window).trigger("hashchange");
 		alert("Successfully logged in");
 		return true;
 	}
-}*/
+}
+
 function validateSignupForm() {
 	var mail = document.getElementById("signEmail").value;
 	var name = document.getElementById("signName").value;
@@ -49,14 +50,23 @@ function validateSignupForm() {
 	}
 }
 
-document.getElementById('signup-buttom').addEventListener('click', async function(event) {
+const signupbtn = document.getElementById('signup-buttom');
+
+
+
+signupbtn.addEventListener('click', async function(event) {
 	event.preventDefault();
 	const email = document.getElementById('signEmail').value;
 	const password = document.getElementById('signPassword').value;
 	const name = document.getElementById('signName').value;
 
+	if (!name || !email || !password) {
+		alert('Please fill in all fields');
+		return;
+	}
+
 	try {
-		const response = await fetch('http://localhost:8080/profile/create', {
+		const response = await fetch('http://127.0.0.1:8080/profile/create', {
 			method: 'POST',
 			headers: {
 				'Content-type': 'application/json'
@@ -66,11 +76,11 @@ document.getElementById('signup-buttom').addEventListener('click', async functio
 
 		
 		if (response.ok) {
-			// Handle successful registration
+			
 			console.log('Registration successful');
-			// Optionally, you can redirect the user or display a success message
+			
 		  } else {
-			// Handle registration failure
+			
 			console.error('Registration failed');
 		  }
 		} catch (error) {
@@ -102,29 +112,40 @@ document.getElementById('signup-buttom').addEventListener('click', async functio
 		}
 	};*/
 
-	function handleGoogleSignIn() {
-		google.accounts.id.initialize({
-			client_id: '569178294581-8o8bk3geh4velg2tioj5bk615faeo74g.apps.googleusercontent.com',
-			callback: handleCredentialResponse
-		});
-
-		google.accounts.id.prompt();
-	}
-
-	function handleCredentialResponse(response) {
-		fetch('/google_login', {
+	async function handleLoginSubmit(event) {
+		event.preventDefault(); // Prevent the default form submission
+	  
+		// Get the email and password values from the form
+		const email = document.getElementById('logEmail').value;
+		const password = document.getElementById('logPassword').value;
+	  
+		try {
+		  const response = await fetch('http://localhost:8080/login', {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json'
+			  'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ token: response.credential })
-		}).then(response => {
-			if (response.ok) {
-				console.log('User signed in successfully');
-			} else {
-				console.log('Failed to sign in user');
-			}
-		}).catch(error => {
-			console.error('Error during sign-in', error);
-		});
-	}
+			body: JSON.stringify({ email, password }),
+		  });
+	  
+		  if (response.ok) {
+			// Login successful
+			const { token } = await response.json();
+			// Store the token in localStorage or handle it as needed
+			localStorage.setItem('token', token);
+			// Redirect the user to the "Hello User" page
+			window.location.href = 'hello.html';
+		  } else {
+			// Login failed
+			const error = await response.json();
+			document.getElementById('errorMsg').textContent = error.error;
+		  }
+		} catch (error) {
+		  console.error('Network error:', error);
+		  document.getElementById('errorMsg').textContent = 'An error occurred during login';
+		}
+	  }
+
+
+
+ 

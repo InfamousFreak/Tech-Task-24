@@ -11,7 +11,6 @@ import (
 	"github.com/InfamousFreak/Tech-Task-24/repository"
 	"github.com/gofiber/fiber/v2"
 	jtoken "github.com/golang-jwt/jwt/v4"
-	//"github.com/InfamousFreak/Tech-Task-24/passwordhashing"
 	"github.com/InfamousFreak/Tech-Task-24/database"
 )
 
@@ -25,27 +24,20 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 	// Find the user by credentials
-	user, err := repository.Find(loginRequest.Email, loginRequest.Password) 
+	user, err := repository.Find(database.Db, loginRequest.Email, loginRequest.Password) 
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error": err.Error(), 
 		})
 	}
 
-    if err := database.Db.Where("email = ?", loginRequest.Email).First(&user).Error; err != nil {
-        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid email or password"})
-    }
-
-    // Compare the provided password with the stored hashed password
-    //if err := passwordhashing.CompareHashAndPassword(loginRequest.Password, user.Password); err != nil {
-        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid email or password"})
-    	
-
 	day := time.Hour * 24 
 	claims := jtoken.MapClaims{
 		"ID":    user.ID,
+		"name": user.Name,
 		"email": user.Email,
 		"city":  user.City,
+		"preferences": user.Preferences,
 		"exp":   time.Now().Add(day * 1).Unix(),
 	}
 	

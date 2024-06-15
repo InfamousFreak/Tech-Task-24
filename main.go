@@ -22,24 +22,12 @@ func main() {
 		err := c.SendString("And the API is UP!")
 		return err
 	})
-//bcrypt password hash prompt
-	/*var password string
-    fmt.Printf("Please Enter your password : ")
-    fmt.Scanln(&password)
-
-    hash, _ := passwordhashing.HashPassword(password)
-
-    fmt.Println("Password:", password)
-    fmt.Println("Hash:    ", hash)
-
-    match := passwordhashing.VerifyPassword(password, hash)
-    fmt.Println("Match:   ", match)*/
 
 	app.Use(cors.New(cors.Config{
-        AllowOrigins: "http://127.0.0.1:5501", // Replace with your frontend URL
-        AllowHeaders: "Origin, Content-Type, Accept, Authorization",
-		AllowMethods: "GET ,POST ,PUT ,DELETE ,HEAD ,PATCH",
+        AllowOrigins: "http://127.0.0.1:5500", 
+        AllowHeaders: "Origin, Content-Type, Accept",
     }))
+	app.Static("/", "/frontend")
 
 	jwt := middlewares.NewAuthMiddleware(config.Secret)
 	config.GoogleConfig()

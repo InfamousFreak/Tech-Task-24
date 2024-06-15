@@ -14,6 +14,13 @@ func CreateUserProfile(c *fiber.Ctx) error {
 	if err := c.BodyParser(newUser); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"Error": err.Error()})
 	}
+
+    if newUser.Name == "" || newUser.Email == "" || newUser.Password == "" {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+            "Error": "Username, email, and password are required",
+        })
+    }
+
 	hashedPassword, err := passwordhashing.HashPassword(newUser.Password)
     if err != nil {
         return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"Error": "Failed to hash password"})
@@ -34,64 +41,6 @@ func CreateUserProfile(c *fiber.Ctx) error {
 	return nil
 }
 
-// Check if the user already exists
-//result := database.DB.First(&newUser, "username = ?", userName)
-//if result.Error != nil {
-//	if result.Error == gorm.ErrRecordNotFound {
-// If not found, create a new user profile
-/*createResult := database.DB.Create(&newUser)
-			if createResult.Error != nil {
-				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": createResult.Error.Error()})
-			}
-			return c.Status(fiber.StatusCreated).JSON(newUser)
-		}
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": result.Error.Error()})
-	}
-
-	// If user exists, return the user profile
-	return c.Status(fiber.StatusOK).JSON(newUser)
-}
-
-/*func Register(c *fiber.Ctx) error {
-	newUser := new(models.User)
-	if err := c.BodyParser(newUser); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"Error": err.Error(),
-		})
-	}
-	newUser.Password, =hashpassword.HashPassword(newUser.Password)
-	result := database.Db.Create(&newUser)
-	//database.Db.Create(&newUser)
-	if result.Error != nil {
-		c.Status(400).JSON(&fiber.Map{
-			"data":    nil,
-			"success": false,
-			"message": result.Error,
-		})
-		return result.Error
-	}
-
-	c.Status(200).JSON(&fiber.Map{
-		"data":    newUser,
-		"success": true,
-		"message": "Successfully registered",
-	})
-	return nil
-	day:=time.Hour*24;
-	claims:=jtoken.MapClaims{
-		"ID": newUser.ID,
-		"email":newUser.Email,
-		"expi":time.Now().Add(day*1).Unix(),
-	}
-	token:=jtoken.NewWithClaims(jtoken.SigningMethodHS256,claims)
-	t,err:=token.SignedString([]byte(config.Secret))
-	if err != nil{
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error":err.Error(),})
-	}
-	return c.JSON(models.LoginResponse{
-		Token:t,
-	})
-}*/
 
 /*func UpdateUserProfile(c *fiber.Ctx) error {
 	var user models.UserProfile

@@ -14,6 +14,7 @@ func SetupRouter(app *fiber.App) {
 	app.Post("/profile/:id", controllers.UpdateUserProfile)
 	app.Delete("profile/:id", controllers.DeleteUserProfile)
 	app.Get("profile/show", controllers.ShowProfiles)
+	app.Post("/profile/selectrole", controllers.selectRole)
 
 
 	app.Post("/cart/add", controllers.AddToCart)

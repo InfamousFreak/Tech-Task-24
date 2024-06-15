@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <title>Foodium</title>
+        <link rel="stylesheet"  href="style.css">
+    </head>
+    <body>
+        <div class="box">
+                <div class="welcome">
+                    <img src="https://img.icons8.com/?size=48&id=12869&format=png" alt="" width="40" height="40" class="d-inline-block align-text-bottom">
+                    <h2>Foodium</h2>  
+                </div>
+                <div class="roletext">
+                    Who do we have here?
+                </div>
+                <div class="role">
+                    <label for="user-role">Select your role:</label>
+                    <br>
+                    <div class="drop">
+                        <select id="user-role" name="user-role">
+                            <option value="customer">Customer</option>
+                            <option value="restaurateur">Restaurateur</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="proceed">
+                    <input id="proceed-buttom" type="submit" value="Proceed">
+                </div>
+        </div>
+        <script>
+            	  document.getElementById('proceed-buttom').addEventListener('click', function() {
+		const selectedRole = document.getElementById('user-role').value;
+		if (selectedRole === 'customer') {
+			window.location.href = 'customer.html';
+		} else if (selectedRole === 'restaurateur') {
+			window.location.href = 'restaurateur.html';
+		}
+	});
+        </script>
+    </body>
+</html>

@@ -15,22 +15,5 @@ func NewAuthMiddleware(secret string) fiber.Handler { //function only accepts an
 	})
 }
 
-/*func AuthenticateUser(c *fiber.Ctx) error {
-    tokenString := c.Get("Authorization")
-    if tokenString == "" {
-        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "No token provided"})
-    }
 
-    token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-        return []byte(config.Secret), nil
-    })
-
-    if err != nil || !token.Valid {
-        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid token"})
-    }
-
-    claims := token.Claims.(jwt.MapClaims)
-
-    return c.Next()
-}*/
 

@@ -6,27 +6,23 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <title>Foodium</title>
     <link rel="stylesheet"  href="style.css">
-    <div class="container">
-        <a class="heading">
-            <img src="https://img.icons8.com/?size=48&id=12869&format=png" alt="" width="30" height="27" class="d-inline-block align-text-bottom">
-            <h2>Foodium</h2>
-          </a>
-    </div>
 </head>
-
 <body>
     <div class="box">
 
         <div class="page">
-            <div class="welcome">Welcome to Foodium, User.</div>
+            <div class="welcome">
+                <img src="https://img.icons8.com/?size=48&id=12869&format=png" alt="" width="40" height="40" class="d-inline-block align-text-bottom">
+                <h2>Foodium</h2>  
+            </div>
             <div class="header">
                 <a id="login" class="active" href="#login">Login</a>
                 <a id="signup" href="#signup">SignUp</a>
             </div>
             <div id="errorMsg"></div>
             <div class="content">
-                <form class="login" name="loginForm" onsubmit="return validateLoginForm()" method="POST">
-                    <input type="text" name="name" id="logName" placeholder="Username">
+                <form class="login" name="loginForm" onsubmit="return handleLoginSubmit(event)" method="POST">
+                    <input type="email" name="email" id="logEmail" placeholder="Email">
                     <input type="password" name="password" id="logPassword" placeholder="Password">
                     <div id="check">
                         <input type="checkbox" id="remember">

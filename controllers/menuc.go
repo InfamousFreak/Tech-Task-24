@@ -43,17 +43,3 @@ func SearchMenuItemsByTags(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(items) //if no error then sends a json response
 }
 
-func SearchMenuItemsByName(c *fiber.Ctx) error {
-    name := c.Query("name")
-    if name == "" {
-        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Name query parameter is required"})
-    }
-
-    var items []models.MenuItem
-    result := database.Db.Where("name LIKE ?", "%"+name+"%").Find(&items)
-    if result.Error != nil {
-        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": result.Error.Error()})
-    }
-
-    return c.Status(fiber.StatusOK).JSON(items)
-}
