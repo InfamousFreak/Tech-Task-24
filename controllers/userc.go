@@ -113,5 +113,44 @@ func DeleteUserProfile(c *fiber.Ctx) error {
     })
 }
 
+func SelectRole(c *fiber.Ctx) error {
+
+    var roleData struct {
+        UserID       uint   `json:"user_id"`
+        Role         string `json:"role"`
+        BusinessLicenseNumber string `json:"business_license_number,omitempty"`
+        RestaurantType string `json:"restaurant_type,omitempty"`
+    }
+
+    if err := c.BodyParser(&roleData); err != nil {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+    }
+
+    var userProfile models.UserProfile
+    if err := database.Db.First(&userProfile, roleData.UserID).Error; err != nil {
+        return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "User not found"})
+    }
+
+    userProfile.Role = roleData.Role
+
+    if err := database.Db.Save(&userProfile).Error; err != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+    }
+
+    if roleData.Role == "restaurateur" {
+        restaurateur := models.Admin{
+            UserProfileID: userProfile.UserID,
+            BusinessLicenseNumber: roleData.BusinessLicenseNumber,
+            RestaurantType: roleData.RestaurantType,
+        }
+
+        if err := database.Db.Create(&restaurateur).Error; err != nil {
+            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+        }
+    }
+
+    return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Role updated successfully"})
+}
+
 
 

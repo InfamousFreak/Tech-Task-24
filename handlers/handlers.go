@@ -34,10 +34,8 @@ func Login(c *fiber.Ctx) error {
 	day := time.Hour * 24 
 	claims := jtoken.MapClaims{
 		"ID":    user.ID,
-		"name": user.Name,
 		"email": user.Email,
-		"city":  user.City,
-		"preferences": user.Preferences,
+		"role": user.Role,
 		"exp":   time.Now().Add(day * 1).Unix(),
 	}
 	
@@ -63,7 +61,7 @@ func Protected(c *fiber.Ctx) error {
 	claims := user.Claims.(jtoken.MapClaims)
 	email := claims["email"].(string)
 	city := claims["city"].(string)
-	return c.SendString("Welcome 👋" + email + " " + city)
+	return c.SendString("Welcome" + email)
 }
 
 func GoogleLogin(c *fiber.Ctx) error {
