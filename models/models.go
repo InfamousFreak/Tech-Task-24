@@ -1,5 +1,10 @@
 package models
 
+import (
+	"github.com/golang-jwt/jwt/v4"
+	"github.com/jinzhu/gorm"
+)
+
 type LoginRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
