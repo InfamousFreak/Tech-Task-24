@@ -6,8 +6,9 @@ import (
 )
 
 type LoginRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+    Email           string `json:"email"`
+    Password        string `json:"password"`
+    BusinessLicense string `json:"business_license,omitempty"`
 }
 
 type LoginResponse struct {
@@ -15,14 +16,16 @@ type LoginResponse struct {
 }
 
 type UserProfile struct {
-	gorm.Model
-	UserID   uint   `gorm:"unique" json:"id"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	City     string `json:"city"`
-	Role 	 string `json:"role"`
+    gorm.Model
+    UserID         uint   `gorm:"primaryKey" json:"id"`
+    Name           string `json:"name"`
+    Email          string `json:"email"`
+    Password       string `json:"password"`
+    City           string `json:"city"`
+    Role           string `json:"role"`
+    BusinessLicense string `json:"business_license"` // New field for business license
 }
+
 
 type Admin struct {
     gorm.Model
@@ -32,8 +35,9 @@ type Admin struct {
     RestaurantType      string `json:"restaurant_type"`
 }
 
-type Role struct{
-	Role string `json:"role"`
+type Roles struct {
+    Role            string `json:"role"`
+    BusinessLicense string `json:"business_license,omitempty"`
 }
 
 type Claims struct {
@@ -42,7 +46,7 @@ type Claims struct {
 
 type MenuItem struct {
     gorm.Model
-	MenuItemID   uint   `gorm:"primaryKey" json:"id"`
+	MenuItemID   uint   `gorm:"primaryKey" json:"item_id"`
     Name        string  `json:"name"`
     Description string  `json:"description"`
     Price       float64 `json:"price"`

@@ -10,7 +10,7 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
-func Config(key string) string {
+func Load(key string) string {
 	//load .env file
 	err := godotenv.Load(".env")
 	if err != nil {

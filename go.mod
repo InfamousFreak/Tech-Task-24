@@ -3,18 +3,18 @@ module github.com/InfamousFreak/Tech-Task-24
 go 1.22.3
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gofiber/fiber/v2 v2.52.4
 	github.com/gofiber/jwt/v3 v3.3.10
+	github.com/jinzhu/gorm v1.9.16
 	golang.org/x/crypto v0.14.0
 )
 
 require (
 	cloud.google.com/go/compute/metadata v0.3.0 // indirect
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/pgx/v5 v5.4.3 // indirect
-	github.com/jinzhu/gorm v1.9.16 // indirect
 	golang.org/x/text v0.13.0 // indirect
 )
 

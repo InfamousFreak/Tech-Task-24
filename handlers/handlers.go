@@ -18,20 +18,28 @@ import (
 
 // Login route
 func Login(c *fiber.Ctx) error {
-	// Extract the credentials from the request body
+	
 	loginRequest := new(models.LoginRequest) 
 	if err := c.BodyParser(loginRequest); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": err.Error(), 
 		})
 	}
-	// Find the user by credentials
-	user, err := repository.Find(database.Db, loginRequest.Email, loginRequest.Password) 
-	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": err.Error(), 
-		})
-	}
+	// find the user by repository.find database query
+    user, err := repository.Find(database.Db, loginRequest.Email, loginRequest.Password) 
+    if err != nil {
+        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+            "error": "Invalid email or password", 
+        })
+    }
+
+
+	if user.Role == "restaurateur" && user.BusinessLicense != loginRequest.BusinessLicense {
+        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+            "error": "Invalid business license number",
+        })
+    }
+
 
 	day := time.Hour * 24 
 	claims := jtoken.MapClaims{
@@ -49,7 +57,7 @@ func Login(c *fiber.Ctx) error {
 			"error": err.Error(),
 		})
 	}
-	// Return the JWT token in the response body
+	// return the JWT token in the response body
 	return c.JSON(models.LoginResponse{
 		Token: t,
 	})
@@ -121,24 +129,21 @@ func GoogleCallback(c *fiber.Ctx) error {
 	}
 	
 
-day:=time.Hour*24;
-claims:=jtoken.MapClaims{
-	"ID": newUser.ID,
-	"email":newUser.Email,
-	"role":newUser.Role,
-	"expi":time.Now().Add(day*1).Unix(),
-}
-token2:=jtoken.NewWithClaims(jtoken.SigningMethodHS256,claims)
-t,err:=token2.SignedString([]byte(config.Secret))
-if err != nil{
-	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{ "error":err.Error(),})
-}
-return c.JSON(models.LoginResponse{
-	Token:t,
-})
-
-	 //fmt.Println(newUser)
-	//return c.SendString(string(userData))
+	day:=time.Hour*24;
+	claims:=jtoken.MapClaims{
+		"ID": newUser.ID,
+		"email":newUser.Email,
+		"role":newUser.Role,
+		"expi":time.Now().Add(day*1).Unix(),
+	}
+	token2:=jtoken.NewWithClaims(jtoken.SigningMethodHS256,claims)
+	t,err:=token2.SignedString([]byte(config.Secret))
+	if err != nil{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{ "error":err.Error(),})
+	}
+	return c.JSON(models.LoginResponse{
+		Token:t,
+	})
 
 }
 

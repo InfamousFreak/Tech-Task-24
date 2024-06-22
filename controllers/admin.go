@@ -6,23 +6,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-//functiont o get all the registered user profiles
-func ShowProfiles(c *fiber.Ctx) error {
-    var users []models.UserProfile
-
-    // Query the database for all user profiles
-    result := database.Db.Find(&users)
-    if result.Error != nil {
-        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": result.Error.Error()})
-    }
-
-    return c.Status(fiber.StatusOK).JSON(&fiber.Map{
-        "data":    users,
-        "success": true,
-        "message": "Retrieved Successfully",
-    })
-}
-
 //function to get a specific user profile
 func AdminGetUserProfile(c *fiber.Ctx) error {
 	id := c.Params("id")

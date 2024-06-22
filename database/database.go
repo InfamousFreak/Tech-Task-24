@@ -23,11 +23,11 @@ var Db *gorm.DB
 
 func InitDB() error {
 	// Extracting the configuration
-	host := config.Config("DB_HOST")
-	port := config.Config("DB_PORT")
-	user := config.Config("DB_USER")
-	password := config.Config("DB_PASSWORD")
-	dbname := config.Config("DB_NAME")
+	host := config.Load("DB_HOST")
+	port := config.Load("DB_PORT")
+	user := config.Load("DB_USER")
+	password := config.Load("DB_PASSWORD")
+	dbname := config.Load("DB_NAME")
 
 	// Print the config to ensure they're correctly set
 	fmt.Printf("Connecting to DB with host=%s port=%s user=%s password=%s dbname=%s\n", host, port, user, password, dbname)
@@ -49,7 +49,7 @@ func InitDB() error {
 	fmt.Println("Successfully connected to the database")
 
 	// AutoMigrate tables
-	err = Db.AutoMigrate(&models.UserProfile{}, &models.MenuItem{}, &models.CartItem{}, &models.Admin{})
+	err = Db.AutoMigrate(&models.UserProfile{}, &models.MenuItem{}, &models.CartItem{})
 	if err != nil {
 		return fmt.Errorf("failed to auto-migrate: %w", err)
 	}

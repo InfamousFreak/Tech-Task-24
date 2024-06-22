@@ -1,36 +1,79 @@
 <!DOCTYPE html>
 <html>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <head>
-        <title>Foodium</title>
-        <link rel="stylesheet"  href="style5.css">
-    </head>
-    <body>
-        <div class="box">
-                <div class="welcome">
-                    <img src="https://img.icons8.com/?size=48&id=12869&format=png" alt="" width="40" height="40" class="d-inline-block align-text-bottom">
-                    <h2>Foodium</h2>  
-                </div>
-                <div class="roletext">
-                    Who do we have here?
-                </div>
-                <div class="role">
-                    <label for="user-role">Select your role:</label>
-                    <br>
-                    <div class="drop">
-                        <select id="user-role" name="user-role">
-                            <option value="customer">Customer</option>
-                            <option value="restaurateur">Restaurateur</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="proceed">
-                    <input id="proceed-buttom" type="submit" value="Proceed">
-                </div>
+    <title>Foodium</title>
+    <link rel="stylesheet" href="style5.css">
+</head>
+<body>
+    <div class="box">
+        <div class="welcome">
+            <img src="https://img.icons8.com/?size=48&id=12869&format=png" alt="" width="40" height="40" class="d-inline-block align-text-bottom">
+            <h2>Foodium</h2>
         </div>
-        <script>
-            	  document.getElementById('proceed-buttom').addEventListener('click', function() {
+        <div class="roletext">
+            Who do we have here?
+        </div>
+        <div class="role">
+            <label for="user-role">Select your role:</label>
+            <br>
+            <div class="drop">
+                <select id="user-role" name="user-role" onchange="toggleLicenseField()">
+                    <option value="customer">Customer</option>
+                    <option value="restaurateur">Restaurateur</option>
+                </select>
+            </div>
+        </div>
+        <div id="licenseField" style="display:none;">
+            <label for="businessLicense">Business License Number:</label>
+            <input type="text" id="businessLicense" name="business_license">
+        </div>
+        <div class="proceed">
+            <input id="proceed-button" type="button" value="Proceed">
+        </div>
+    </div>
+    <script>
+        function toggleLicenseField() {
+		    const role = document.getElementById('user-role').value;
+			const licenseField = document.getElementById('licenseField');
+			if (role === 'restaurateur') {
+				licenseField.style.display = 'block';
+			} else {
+				licenseField.style.display = 'none';
+			}
+		}
+	
+        document.getElementById('proceed-button').addEventListener('click', function() {
+            const selectedRole = document.getElementById('user-role').value;
+            const businessLicense = document.getElementById('businessLicense').value;
+
+            if (selectedRole === 'restaurateur' && !businessLicense) {
+                alert('Please enter a business license number');
+                return;
+            }
+
+            const data = {
+                role: selectedRole,
+                business_license: businessLicense
+            };
+
+            fetch('http://localhost:8080/profile/role', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(response => response.json()).then(data => {
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    alert(data.status || 'Role updated successfully');
+                }
+            });
+        });
+
+    document.getElementById('proceed-button').addEventListener('click', function() {
 		const selectedRole = document.getElementById('user-role').value;
 		if (selectedRole === 'customer') {
 			window.location.href = 'customer.html';
@@ -38,6 +81,6 @@
 			window.location.href = 'restaurateur.html';
 		}
 	});
-        </script>
-    </body>
+    </script>
+</body>
 </html>

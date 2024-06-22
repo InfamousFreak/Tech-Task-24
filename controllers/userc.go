@@ -2,11 +2,14 @@ package controllers
 
 import (
 	"fmt"
+    "time"
 
 	"github.com/InfamousFreak/Tech-Task-24/database"
 	"github.com/InfamousFreak/Tech-Task-24/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/InfamousFreak/Tech-Task-24/passwordhashing"
+    "github.com/InfamousFreak/Tech-Task-24/config"
+    jtoken "github.com/golang-jwt/jwt/v4"
 )
 
 func CreateUserProfile(c *fiber.Ctx) error {
@@ -27,18 +30,53 @@ func CreateUserProfile(c *fiber.Ctx) error {
     }
     newUser.Password = hashedPassword
 
-	createResult := database.Db.Create(&newUser)
-	if createResult.Error != nil {
-		c.Status(400).JSON(&fiber.Map{"error": createResult.Error.Error()})
-		return createResult.Error
-	}
+    createResult := database.Db.Create(&newUser)
+    if createResult.Error != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+            "success": false,
+            "message": "Failed to create user",
+            "error":   "Database error",
+        })
+    }
 
-	c.Status(200).JSON(&fiber.Map{
-		"data":    newUser,
-		"success": true,
-		"message": "Created Successfully",
+    //return nil
+    claims := jtoken.MapClaims{
+        "ID":  newUser.UserID,
+        "email": newUser.Email,
+        "exp": time.Now().Add(time.Hour * 24).Unix(), // Token expires in 24 hours
+    }
+    token := jtoken.NewWithClaims(jtoken.SigningMethodHS256, claims)
+    t,err:= token.SignedString([]byte(config.Secret))
+
+    if err != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+            "success": false,
+            "message": "Failed to generate token",
+            "error":   "Internal server error",
+        })
+    }
+
+    return c.JSON(models.LoginResponse{
+		Token:t,
 	})
-	return nil
+
+    return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+        "success": true,
+        "message": "User created successfully",
+        "data": fiber.Map{
+            "user":  sanitizeUserData(newUser),
+            "token": token,
+        },
+    })
+
+}
+
+func sanitizeUserData(user *models.UserProfile) *models.UserProfile {
+    return &models.UserProfile{
+        UserID:    user.UserID,
+        Name:      user.Name,
+        Email:     user.Email,
+    }
 }
 
 
@@ -113,7 +151,7 @@ func DeleteUserProfile(c *fiber.Ctx) error {
     })
 }
 
-func SelectRole(c *fiber.Ctx) error {
+/*func SelectRole(c *fiber.Ctx) error {
 
     var roleData struct {
         UserID       uint   `json:"user_id"`
@@ -150,7 +188,94 @@ func SelectRole(c *fiber.Ctx) error {
     }
 
     return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Role updated successfully"})
+}*/
+
+//functiont o get all the registered user profiles
+func ShowProfiles(c *fiber.Ctx) error {
+    var users []models.UserProfile
+
+    // Query the database for all user profiles
+    result := database.Db.Find(&users)
+    if result.Error != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": result.Error.Error()})
+    }
+
+    return c.Status(fiber.StatusOK).JSON(&fiber.Map{
+        "data":    users,
+        "success": true,
+        "message": "Retrieved Successfully",
+    })
 }
+
+func Role(c *fiber.Ctx) error {
+    var currUser models.UserProfile
+    var currRole models.Roles
+
+    if err := c.BodyParser(&currRole); err != nil {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+            "Error": err.Error(),
+        })
+    }
+
+    user := c.Locals("user").(*jtoken.Token)
+    claims := user.Claims.(jtoken.MapClaims)
+    idF6 := claims["ID"].(float64)
+    id := uint(idF6)
+
+    if result := database.Db.First(&currUser, id).Error; result != nil {
+        return c.Status(400).JSON(&fiber.Map{
+            "message": "User does not exist",
+        })
+    }
+
+    currUser.Role = currRole.Role
+
+    if currRole.Role == "restaurateur" {
+        if currRole.BusinessLicense == "" {
+            return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+                "message": "Business license required for restaurateurs",
+            })
+        }
+        currUser.BusinessLicense = currRole.BusinessLicense
+    }
+
+    database.Db.Save(&currUser)
+
+    day := time.Hour * 24
+    claims = jtoken.MapClaims{
+        "ID":    currUser.ID,
+        "email": currUser.Email,
+        "role":  currUser.Role,
+        "expi":  time.Now().Add(day * 1).Unix(),
+    }
+
+    token2 := jtoken.NewWithClaims(jtoken.SigningMethodHS256, claims)
+    t, err := token2.SignedString([]byte(config.Secret))
+    if err != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+            "error": err.Error(),
+        })
+    }
+
+    /*response := models.LoginResponse{
+        Token: t,
+    }*/
+
+    // Determine redirect URL based on role
+    var redirectURL string
+    if currUser.Role == "customer" {
+        redirectURL = "/customer.html"
+    } else if currUser.Role == "restaurateur" {
+        redirectURL = "/restaurateur.html"
+    }
+
+    // Add redirection URL to the response
+    return c.JSON(fiber.Map{
+        "token": t,
+        "redirect": redirectURL,
+    })
+}
+
 
 
 
