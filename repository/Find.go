@@ -29,14 +29,13 @@ func Find(db *gorm.DB, email, password string) (*models.UserProfile, error) {
     // Query the database for the user with the given email
     if err := db.Where("email = ?", email).First(&user).Error; err != nil {
         if errors.Is(err, gorm.ErrRecordNotFound) {
-            return nil, errors.New("user not found")
+            return nil, errors.New("Invalid Credentials")
         }
         return nil, err
     }
 
-    // Compare the provided password with the stored hashed password
     if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-        return nil, errors.New("invalid password")
+        return nil, errors.New("Invalid Credentials")
     }
 
     return &user, nil

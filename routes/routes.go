@@ -12,12 +12,16 @@ func SetupRouter(app *fiber.App) {
     app.Post("/profile/create", controllers.CreateUserProfile)
     app.Post("/profile/:id", jwt, controllers.UpdateUserProfile)
     app.Delete("/profile/:id", jwt, controllers.DeleteUserProfile)
+    app.Get("/profile/:id/details", jwt, controllers.ShowUserProfile)
+    app.Get("/profile/show", jwt, controllers.ShowProfiles)
 
     app.Get("/menu/get", controllers.GetMenuItems)
     app.Post("/menu/create", jwt, controllers.CreateMenuItem)
     app.Get("/menu/search", jwt, controllers.SearchMenuItemsByTags)
+    app.Patch("/menu/:id", controllers.UpdateMenuItem)
+
     app.Post("/cart/add", jwt, controllers.AddToCart)
     app.Get("/cart/:id", controllers.GetCartItems)
-    app.Get("/profile/show", controllers.ShowProfiles)
-	app.Post("/profile/role", controllers.Role)
+
+
 }

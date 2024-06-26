@@ -12,7 +12,7 @@ import (
 	"github.com/InfamousFreak/Tech-Task-24/models"
 	"github.com/InfamousFreak/Tech-Task-24/repository"
 	"github.com/gofiber/fiber/v2"
-	jtoken "github.com/golang-jwt/jwt/v4"
+	jwt "github.com/golang-jwt/jwt/v4"
 	"github.com/InfamousFreak/Tech-Task-24/database"
 )
 
@@ -29,32 +29,30 @@ func Login(c *fiber.Ctx) error {
     user, err := repository.Find(database.Db, loginRequest.Email, loginRequest.Password) 
     if err != nil {
         return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-            "error": "Invalid email or password", 
+            "error": "Invalid Credentials", 
         })
     }
 
 
 	if user.Role == "restaurateur" && user.BusinessLicense != loginRequest.BusinessLicense {
         return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-            "error": "Invalid business license number",
+            "error": "Invalid license number",
         })
     }
 
-
-	day := time.Hour * 24 
-	claims := jtoken.MapClaims{
+	tokenExpiration := time.Now().Add(time.Hour * 12)
+	claims := jwt.MapClaims{
 		"ID":    user.ID,
 		"email": user.Email,
 		"role": user.Role,
-		"exp":   time.Now().Add(day * 1).Unix(),
+		"exp":   tokenExpiration.Unix(),
 	}
 	
-	token := jtoken.NewWithClaims(jtoken.SigningMethodHS256, claims) 
-	
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims) 
 	t, err := token.SignedString([]byte(config.Secret))
 	if err != nil {                                     
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
+			"error": "Failed to generate token",
 		})
 	}
 	// return the JWT token in the response body
@@ -67,8 +65,8 @@ func Login(c *fiber.Ctx) error {
 // Protected route
 func Protected(c *fiber.Ctx) error {
 	// Get the user from the context and return it
-	user := c.Locals("user").(*jtoken.Token)
-	claims := user.Claims.(jtoken.MapClaims)
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
 	email := claims["email"].(string)
 	return c.SendString("Welcome" + email)
 }
@@ -130,13 +128,13 @@ func GoogleCallback(c *fiber.Ctx) error {
 	
 
 	day:=time.Hour*24;
-	claims:=jtoken.MapClaims{
+	claims:=jwt.MapClaims{
 		"ID": newUser.ID,
 		"email":newUser.Email,
 		"role":newUser.Role,
 		"expi":time.Now().Add(day*1).Unix(),
 	}
-	token2:=jtoken.NewWithClaims(jtoken.SigningMethodHS256,claims)
+	token2:=jwt.NewWithClaims(jwt.SigningMethodHS256,claims)
 	t,err:=token2.SignedString([]byte(config.Secret))
 	if err != nil{
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{ "error":err.Error(),})

@@ -17,14 +17,14 @@ type LoginResponse struct {
 
 type UserProfile struct {
     gorm.Model
-    UserID         uint   `gorm:"primaryKey" json:"id"`
     Name           string `json:"name"`
-    Email          string `json:"email"`
+    Email          string `gorm:"unique;not null" json:"email"` // Ensure email is unique and not null
     Password       string `json:"password"`
     City           string `json:"city"`
     Role           string `json:"role"`
-    BusinessLicense string `json:"business_license"` // New field for business license
+    BusinessLicense string `json:"business_license"`
 }
+
 
 
 type Admin struct {
@@ -51,6 +51,7 @@ type MenuItem struct {
     Description string  `json:"description"`
     Price       float64 `json:"price"`
     Tags        string  `json:"tags"`
+    ImageUrl    string  `json:"imageUrl"`
 }
 
 type CartItem struct {

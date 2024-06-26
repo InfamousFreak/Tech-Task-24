@@ -3,7 +3,6 @@ body{
     padding: 0;
     font-family : Verdana,Tahoma, sans-serif;
     background-color: #EFEBE0;
-     background-image: url(ella-olsson-4dQiaWKiL-Y-unsplash.jpg);
     background-repeat: no repeat;
     background-size: cover;
     background-blend-mode: soft-light;
@@ -36,9 +35,11 @@ h2 {
     margin-left: 170px;
     transition: 0.5s;
     margin-top:30px;
+    font-size:20px;
 }
 #login-buttom:hover, #signup-buttom:hover {
     background-color: #d47f60;
+    font-size:20px;
 }
 
 #remember {
@@ -60,7 +61,6 @@ h2 {
     margin-top:150px;
     border-radius:50px;
     transition: 0.5s;
-
 }
 
 .box:hover {
@@ -153,7 +153,7 @@ form {
 input[type=text], input[type=password], input[type=email]{
 	display:block;
     position: relative;
-	border: 1px solid black;
+	border: none;
 	padding: 12px;
     margin-bottom: 15px;
     width: 100%;
@@ -162,19 +162,19 @@ input[type=text], input[type=password], input[type=email]{
 }
 
 input[type=text]:hover,  input[type=password]:hover, input[type=email]:hover{
-    border: 2px solid black;
+    border: none;
 
 }
 
 input[type=submit]{
     display:block;
     position: relative;
-    border: 3px solid BLACK;
+    border: none;
     padding: 12px;
     margin-bottom: 20px;
     width: 100%;
     border-radius: 25px;
-    background-color:#EFEBE0 ;
+    background-color:white ;
     text-align:center;
     font-size: 20px;
     color: black;
@@ -185,7 +185,6 @@ input[type=submit]{
 input[type=submit]:hover{
 	 background-color:#ffffff;
      color: #000000;
-     font-weight: bold;
 }
 input[type=checkbox]{
     background-color:black;

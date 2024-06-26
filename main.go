@@ -32,6 +32,16 @@ func main() {
 	jwt := middlewares.AuthMiddleware()
 	config.GoogleConfig()
 	//config.GithubConfig()
+
+    app.Get("/dashboard", jwt, func(c *fiber.Ctx) error {
+        userID := c.Locals("userID")
+        return c.JSON(fiber.Map{
+            "success": true,
+            "message": "Welcome to your dashboard",
+            "userID":  userID,
+        })
+    })
+    
 	app.Get("/google_login", handlers.GoogleLogin)
 	app.Get("/google_callback", handlers.GoogleCallback)
 	app.Post("/login", handlers.Login)

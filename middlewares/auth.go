@@ -30,7 +30,10 @@ func AuthMiddleware() fiber.Handler {
         
         claims, err := parseAndVerifyToken(tokenString, jwtKey)
         if err != nil {
-            return err
+            return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+                "error": true,
+                "message": "Invalid or expired JWT: " + err.Error(),
+            })
         }
 
         // token is valid, store the claims in the context

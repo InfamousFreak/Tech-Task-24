@@ -1,16 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <head>
-        <title>Foodium</title>
-        <link rel="stylesheet"  href="style5.css">
-        <div class="welcome">
-            <img src="https://img.icons8.com/?size=48&id=12869&format=png" alt="" width="40" height="40" class="d-inline-block align-text-bottom">
-            <h2>Foodium</h2>  
+    <title>Foodium Navbar</title>
+    <link rel="stylesheet" href="customer.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-title">
+                <a href="#">Foodium</a>
+            </div>
+            <div class="navbar-links">
+                <a href="customer.html">Home</a>
+                <a href="https://github.com/InfamousFreak">About Us</a>
+                <a href="usermenu.html">Menu</a>
+                <a href="#">Cart</a>
+                <a href="/logout">Logout</a>
+            </div>
+            <div class="navbar-search-profile">
+                <input type="text" placeholder="Search...">
+                <img src="profile-icon.png" alt="Profile Icon" class="profile-icon" id="profile-button">
+            </div>
         </div>
-    </head>
-    <body>
+    </nav>
 
-    </body>
+    <!-- User Details Section -->
+    <div id="user-details" class="hidden">
+        <h2>User Details</h2>
+        <div class="user-category">
+            <h3>Profile Information</h3>
+            <p id="profile-info"></p>
+        </div>
+        <div class="user-category">
+            <h3>Order History</h3>
+            <p id="order-history"></p>
+        </div>
+        <div class="user-category">
+            <h3>Settings</h3>
+            <p id="settings"></p>
+        </div>
+    </div>
+
+    <script src="customer.js"></script>
+</body>
 </html>
+

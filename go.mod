@@ -3,9 +3,7 @@ module github.com/InfamousFreak/Tech-Task-24
 go 1.22.3
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gofiber/fiber/v2 v2.52.4
-	github.com/gofiber/jwt/v3 v3.3.10
 	github.com/jinzhu/gorm v1.9.16
 	golang.org/x/crypto v0.14.0
 )
