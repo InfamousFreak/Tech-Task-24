@@ -24,6 +24,7 @@ func main() {
 	})
 
 	app.Use(cors.New(cors.Config{
+        AllowCredentials: true,
         AllowOrigins: "http://127.0.0.1:5500", 
         AllowHeaders: "Origin, Content-Type, Accept, Authorization",
     }))
@@ -79,5 +80,4 @@ func main() {
     }
     return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "invalid role"})
 }*/
-
 

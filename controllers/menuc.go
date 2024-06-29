@@ -16,7 +16,6 @@ func GetMenuItems(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(items)
 }
 
-
 func CreateMenuItem(c *fiber.Ctx) error {
 	var item models.MenuItem
 	if err := c.BodyParser(&item); err != nil {
@@ -36,8 +35,7 @@ func SearchMenuItemsByTags(c *fiber.Ctx) error {
 	}
 
 	var items []models.MenuItem
-	result := database.Db.Where("tags LIKE ?", "%"+tag+"%").Find(&items) //to find the items matching with the tags column of the database, LIKE is a SQL query that searches the database for partial matching tags, same with the %) and find fills up the items slice with the items matched
-	if result.Error != nil {
+	result := database.Db.Where("FIND_IN_SET(?, tags) > 0", tag).Find(&items)	if result.Error != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": result.Error.Error()})
 	}
 

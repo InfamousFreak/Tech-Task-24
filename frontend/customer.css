@@ -105,3 +105,139 @@ body {
     display:flex;
     flex-direction: column;
 }
+
+
+
+
+
+/* Search input and button styles */
+.navbar-search-profile input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+
+.navbar-search-profile button {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.navbar-search-profile button:hover {
+    background-color: #45a049;
+}
+
+/* Search results styles */
+#search-results {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#search-results h2 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+#search-results:not(.hidden) {
+    display: block !important;
+}
+
+#results-list {
+    list-style-type:none;
+    padding: 0;
+}
+
+#results-list li {
+    margin-bottom: 10px;
+}
+
+#results-list a {
+    color: #2196F3;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+#results-list a:hover {
+    text-decoration: underline;
+}
+
+/* Hide class */
+.hidden {
+    display: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .navbar-search-profile {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .navbar-search-profile input[type="text"],
+    .navbar-search-profile button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* Additional styles for existing elements */
+.navbar {
+    background-color: #333;
+    padding: 10px 0;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.navbar-title a {
+    color: white;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.navbar-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+.navbar-links a:hover {
+    text-decoration: underline;
+}
+
+.profile-icon {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+#user-details {
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.user-category {
+    margin-bottom: 15px;
+}
+
+.user-category h3 {
+    color: #333;
+    margin-bottom: 5px;
+}
+

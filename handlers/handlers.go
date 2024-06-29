@@ -55,9 +55,10 @@ func Login(c *fiber.Ctx) error {
 			"error": "Failed to generate token",
 		})
 	}
-	// return the JWT token in the response body
+	// return the JWT token and the userid for cart fetching in the response body
 	return c.JSON(models.LoginResponse{
 		Token: t,
+		UserID: user.ID,
 	})
 }
 

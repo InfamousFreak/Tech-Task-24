@@ -37,28 +37,34 @@ document.addEventListener("DOMContentLoaded", async () => {
         const response = await fetch("http://127.0.0.1:8080/menu/get");
         if (!response.ok) {
             throw new Error("Failed to fetch menu items");
+
         }
         const menuItems = await response.json();
+
         
         const mostPopularItemsContainer = document.getElementById("most-popular-items");
         menuItems.forEach(item => {
             const itemElement = createMenuItemElement(item);
             mostPopularItemsContainer.appendChild(itemElement);
         });
+
     } catch (error) {
         console.error("Error fetching menu items:", error);
         // Handle error, show message, etc.
     }
 });
 
+
 function createMenuItemElement(item) {
     const itemElement = document.createElement("div");
     itemElement.classList.add("menu-item");
+
 
     const imageElement = document.createElement("img");
     imageElement.src = item.imageUrl; // Assuming imageUrl is a property of your MenuItem model
     imageElement.alt = item.name; // Provide appropriate alt text for accessibility
     itemElement.appendChild(imageElement);
+
 
     const textContainer = document.createElement("div");
     textContainer.classList.add("menu-item-details");
@@ -76,6 +82,7 @@ function createMenuItemElement(item) {
     textContainer.appendChild(itemPrice);
 
     itemElement.appendChild(textContainer);
+    
 
     return itemElement;
 }

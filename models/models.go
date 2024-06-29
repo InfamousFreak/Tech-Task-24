@@ -12,8 +12,10 @@ type LoginRequest struct {
 }
 
 type LoginResponse struct {
-	Token string `json:"token"`
+    Token string `json:"token"`
+    UserID uint `json:"userId"`
 }
+
 
 type UserProfile struct {
     gorm.Model
@@ -55,9 +57,8 @@ type MenuItem struct {
 }
 
 type CartItem struct {
-	gorm.Model //is a struct provided by gorm to include common fields fordatabase mdoels
-
-	UserID     uint `gorm:"primaryKey" json:"id"` //type unsigned integer and how the field should look in the json format
-	MenuItemID uint `gorm:"primaryKey" json:"item_id"`
-	Quantity   int  `json:"quantity"`
+    gorm.Model
+    UserID     uint `gorm:"primaryKey" json:"user_id"`
+    MenuItemID uint `gorm:"primaryKey" json:"item_id"`
+    Quantity   int  `json:"quantity"`
 }

@@ -130,9 +130,10 @@ signupbtn.addEventListener('click', async function(event) {
 	  
 		  if (response.ok) {
 			// Login successful
-			const { token } = await response.json();
+			const { token, userId } = await response.json();
 			// Store the token in localStorage or handle it as needed
 			localStorage.setItem('token', token);
+			localStorage.setItem('userId', userId);
 			// Redirect the user to the "Hello User" page
 			window.location.href = 'hello.html';
 		  } else {

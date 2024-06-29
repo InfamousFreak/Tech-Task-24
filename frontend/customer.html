@@ -17,11 +17,12 @@
                 <a href="customer.html">Home</a>
                 <a href="https://github.com/InfamousFreak">About Us</a>
                 <a href="usermenu.html">Menu</a>
-                <a href="#">Cart</a>
+                <a href="cart.html">Cart</a>
                 <a href="/logout">Logout</a>
             </div>
             <div class="navbar-search-profile">
-                <input type="text" placeholder="Search...">
+                <input type="text" id="search-input" placeholder="Search tags...">
+                <button id="search-button">Search</button>
                 <img src="profile-icon.png" alt="Profile Icon" class="profile-icon" id="profile-button">
             </div>
         </div>
@@ -44,7 +45,12 @@
         </div>
     </div>
 
+    <!-- Search Results Section -->
+    <div id="search-results" class="hidden">
+        <h2>Search Results</h2>
+        <ul id="results-list"></ul>
+    </div>
+
     <script src="customer.js"></script>
 </body>
 </html>
-

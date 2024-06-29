@@ -21,7 +21,7 @@ func SetupRouter(app *fiber.App) {
     app.Patch("/menu/:id", controllers.UpdateMenuItem)
 
     app.Post("/cart/add", jwt, controllers.AddToCart)
-    app.Get("/cart/:id", controllers.GetCartItems)
+    app.Get("/cart/:user_id", controllers.GetCartItems)
 
 
 }
