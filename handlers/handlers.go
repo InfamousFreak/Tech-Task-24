@@ -6,8 +6,10 @@ import (
 	"net/http"
 	"time"
 	"encoding/json"
-	//"fmt"
-
+	//"errors"
+	//"gorm.io/gorm"
+	
+	//"golang.org/x/crypto/bcrypt"
 	"github.com/InfamousFreak/Tech-Task-24/config"
 	"github.com/InfamousFreak/Tech-Task-24/models"
 	"github.com/InfamousFreak/Tech-Task-24/repository"
@@ -145,5 +147,63 @@ func GoogleCallback(c *fiber.Ctx) error {
 	})
 
 }
+
+
+
+
+
+func AdminLogin(c *fiber.Ctx) error {
+    loginRequest := new(models.AdminLoginRequest)
+    if err := c.BodyParser(loginRequest); err != nil {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+            "error": "Invalid input",
+        })
+    }
+
+    // Find the admin using the new FindAdmin function
+    admin, err := repository.FindAdmin(database.Db, loginRequest.Email, loginRequest.Password)
+    if err != nil {
+        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+            "error": "Invalid credentials",
+        })
+    }
+
+    // Generate JWT token
+    tokenExpiration := time.Now().Add(time.Hour * 12)
+    claims := jwt.MapClaims{
+        "ID":    admin.ID,
+        "email": admin.Email,
+        "role":  "admin",
+        "exp":   tokenExpiration.Unix(),
+    }
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+    t, err := token.SignedString([]byte(config.Secret))
+    if err != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+            "error": "Failed to generate token",
+        })
+    }
+    // Return the JWT token
+    return c.JSON(models.AdminLoginResponse{
+        Token:   t,
+        AdminID: admin.ID,
+    })
+}
+
+
+func ProtectedAdmin(c *fiber.Ctx) error {
+    user := c.Locals("user").(*jwt.Token)
+    claims := user.Claims.(jwt.MapClaims)
+    role := claims["role"].(string)
+    
+    if role != "admin" {
+        return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+            "error": "Access denied",
+        })
+    }
+
+    // Admin-specific logic here
+    return c.SendString("Welcome, Admin")
+}	
 
 

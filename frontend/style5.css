@@ -37,7 +37,19 @@ h2 {
     margin-top:30px;
     font-size:20px;
 }
+#admin-login-button, #admin-signup-button {
+    width:300px;
+    margin-left: 170px;
+    transition: 0.5s;
+    margin-top:30px;
+    font-size:20px;
+}
 #login-buttom:hover, #signup-buttom:hover {
+    background-color: #d47f60;
+    font-size:20px;
+}
+
+#admin-login-button:hover, #admin-signup-button:hover {
     background-color: #d47f60;
     font-size:20px;
 }
@@ -50,7 +62,7 @@ h2 {
 
 .box{
     width: 700px;
-    height: 700px;
+    height: 750px;
     background-color:#EFEBE0;
     padding: 20px;
     text-align: center;
@@ -63,6 +75,24 @@ h2 {
     transition: 0.5s;
 }
 
+.adminbox{
+    width: 700px;
+    height: 600px;
+    background-color:#EFEBE0;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    box-sizing: border-box;
+    flex-direction: column;
+    margin-left:600px;
+    margin-top:150px;
+    border-radius:50px;
+    transition: 0.5s;
+}
+.adminbox:hover {
+    background-color:rgb(231, 218, 203);
+}
+
 .box:hover {
     background-color:rgb(231, 218, 203);
 }
@@ -72,7 +102,20 @@ h2 {
     margin-left:80px;
     padding: 15px;
 }
+
+#adminEmail , #adminPassword {
+    width : 500px;
+    margin-left:80px;
+    padding: 15px;
+}
+
 #signName, #signEmail, #signPassword {
+    width : 500px;
+    margin-left:80px;
+    padding:15px;
+}
+
+#adminSignName, #adminSignEmail, #adminSignPassword {
     width : 500px;
     margin-left:80px;
     padding:15px;
@@ -269,6 +312,25 @@ hr {
     width:400px;
     margin-left:120px;
     margin-top:10px;
+}
+
+.menu-items-admin {
+    border: 2px solid black;
+    display :inline-block;
+    margin-left: 400px;
+    margin-top: 50px;
+    height:200px;
+    width: 250px;
+    border-radius: 20px;
+    padding:10px;
+    font-size:40px;
+    box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.2);
+    transition: 0.2s ease-in;
+
+}
+
+.menu-items-admin:hover {
+    transform: translateY(-3%);
 }
 
 

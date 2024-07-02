@@ -75,15 +75,6 @@ func CreateUserProfile(c *fiber.Ctx) error {
         SameSite: "Strict",
     })
 
-    // The following return statement will not be executed, consider removing it
-    // return c.Status(fiber.StatusCreated).JSON(fiber.Map{
-    //     "success": true,
-    //     "message": "User created successfully",
-    //     "data": fiber.Map{
-    //         "user":  sanitizeUserData(newUser),
-    //         "token": t,
-    //     },
-    // })
 
     return c.Status(fiber.StatusCreated).JSON(fiber.Map{
         "success": true,
@@ -224,21 +215,7 @@ func DeleteUserProfile(c *fiber.Ctx) error {
 
 
 //functiont o get all the registered user profiles
-func ShowProfiles(c *fiber.Ctx) error {
-    var users []models.UserProfile
 
-    // Query the database for all user profiles
-    result := database.Db.Find(&users)
-    if result.Error != nil {
-        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": result.Error.Error()})
-    }
-
-    return c.Status(fiber.StatusOK).JSON(&fiber.Map{
-        "data":    users,
-        "success": true,
-        "message": "Retrieved Successfully",
-    })
-}
 
 /*func Role(c *fiber.Ctx) error {
     var currUser models.UserProfile

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"fmt"
 	"gorm.io/gorm"
 	"github.com/InfamousFreak/Tech-Task-24/models"
 	"golang.org/x/crypto/bcrypt"
@@ -39,5 +40,30 @@ func Find(db *gorm.DB, email, password string) (*models.UserProfile, error) {
     }
 
     return &user, nil
+}
+
+func FindAdmin(db *gorm.DB, email, password string) (*models.Admin, error) {
+    var admin models.Admin
+    
+    fmt.Println("Searching for admin with email:", email)  // Debug log
+    
+    if err := db.Where("email = ?", email).First(&admin).Error; err != nil {
+        if errors.Is(err, gorm.ErrRecordNotFound) {
+            fmt.Println("Admin not found in database")  // Debug log
+            return nil, errors.New("Invalid Credentials")
+        }
+        fmt.Println("Database error:", err)  // Debug log
+        return nil, err
+    }
+    
+    fmt.Println("Admin found, comparing passwords")  // Debug log
+    
+    if err := bcrypt.CompareHashAndPassword([]byte(admin.Password), []byte(password)); err != nil {
+        fmt.Println("Password comparison failed:", err)  // Debug log
+        return nil, errors.New("Invalid Credentials")
+    }
+    
+    fmt.Println("Login successful")  // Debug log
+    return &admin, nil
 }
 

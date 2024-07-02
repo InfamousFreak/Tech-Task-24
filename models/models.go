@@ -31,10 +31,19 @@ type UserProfile struct {
 
 type Admin struct {
     gorm.Model
-    UserProfileID       uint   `gorm:"primaryKey" json:"user_profile_id"`
-    UserProfile         UserProfile `gorm:"foreignKey:UserProfileID;references:UserID"`
-    BusinessLicenseNumber string `json:"business_license_number"`
-    RestaurantType      string `json:"restaurant_type"`
+    Email    string `gorm:"unique;not null" json:"email"`
+    Password string `json:"password"` // The "-" ensures this field is not serialized to JSON
+    Name     string `json:"name"`
+}
+
+type AdminLoginRequest struct {
+    Email    string `json:"email"`
+    Password string `json:"password"`
+}
+
+type AdminLoginResponse struct {
+    Token   string `json:"token"`
+    AdminID uint   `json:"admin_id"`
 }
 
 type Roles struct {

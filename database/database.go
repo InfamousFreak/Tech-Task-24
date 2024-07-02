@@ -49,7 +49,7 @@ func InitDB() error {
 	fmt.Println("Successfully connected to the database")
 
 	// AutoMigrate tables
-	err = Db.AutoMigrate(&models.UserProfile{}, &models.MenuItem{}, &models.CartItem{})
+	err = Db.AutoMigrate(&models.UserProfile{}, &models.MenuItem{}, &models.CartItem{}, &models.Admin{})
 	if err != nil {
 		return fmt.Errorf("failed to auto-migrate: %w", err)
 	}

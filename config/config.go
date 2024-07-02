@@ -22,6 +22,7 @@ func Load(key string) string {
 
 // secret key used to sign the JWT, this must be a secure key and should not be stored in the code
 const Secret = "secret"
+const AdminSecret = "secret"
 
 type GConfig struct {
 	GoogleLoginConfig oauth2.Config //defines a struct named config with a field googleloginconfig of type oauth2.config

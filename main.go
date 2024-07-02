@@ -47,6 +47,8 @@ func main() {
 	app.Get("/google_callback", handlers.GoogleCallback)
 	app.Post("/login", handlers.Login)
 	app.Get("/protected", jwt, handlers.Protected)
+    app.Post("/admin/login", handlers.AdminLogin)
+    app.Post("/admin/protected", handlers.ProtectedAdmin)
 	routes.SetupRouter(app)
 	app.Listen(":8080")
 

@@ -52,8 +52,6 @@ function validateSignupForm() {
 
 const signupbtn = document.getElementById('signup-buttom');
 
-
-
 signupbtn.addEventListener('click', async function(event) {
 	event.preventDefault();
 	const email = document.getElementById('signEmail').value;
@@ -78,6 +76,8 @@ signupbtn.addEventListener('click', async function(event) {
 		if (response.ok) {
 			
 			console.log('Registration successful');
+			alert("Successfully signed up.");
+			window.location.hash = "#login";
 			
 		  } else {
 			
@@ -174,7 +174,8 @@ signupbtn.addEventListener('click', async function(event) {
 			});
 
 
-	
+
+
 
 
 
