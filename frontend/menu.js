@@ -60,10 +60,12 @@ function createMenuItemElement(item) {
     itemElement.classList.add("menu-item");
 
 
+
     const imageElement = document.createElement("img");
     imageElement.src = item.imageUrl; // Assuming imageUrl is a property of your MenuItem model
     imageElement.alt = item.name; // Provide appropriate alt text for accessibility
     itemElement.appendChild(imageElement);
+    imageElement.addEventListener("click", () => showItemDetails(item));
 
 
     const textContainer = document.createElement("div");
@@ -86,4 +88,131 @@ function createMenuItemElement(item) {
 
     return itemElement;
 }
+
+/*function showItemDetails(item) {
+    // Create a modal or navigate to a new page
+    const detailsElement = document.createElement("div");
+    detailsElement.classList.add("item-details-modal");
+
+    detailsElement.innerHTML = `
+        <h2>${item.name}</h2>
+        <img src="${item.imageUrl}" alt="${item.name}">
+        <p>${item.description}</p>
+        <p>Price: $${item.price.toFixed(2)}</p>
+        <p>Tags: ${item.tags}</p>
+        <div class="quantity-control">
+            <button class="decrease">-</button>
+            <input type="number" value="1" min="1" class="quantity-input">
+            <button class="increase">+</button>
+        </div>
+        <button class="add-to-cart">Add to Cart</button>
+    `;
+
+    // Add event listeners for quantity control and add to cart
+    // ...
+
+    document.body.appendChild(detailsElement);
+}*/
+
+function showItemDetails(item) {
+    const overlay = document.createElement("div");
+    overlay.classList.add("modal-overlay");
+
+    const detailsElement = document.createElement("div");
+    detailsElement.classList.add("item-details-modal");
+
+    detailsElement.innerHTML = `
+        <button class="close-modal">&times;</button>
+        <h2>${item.name}</h2>
+        <img src="${item.imageUrl}" alt="${item.name}">
+        <p>${item.description}</p>
+        <p>Price: $${item.price.toFixed(2)}</p>
+        <p>Tags: ${item.tags}</p>
+        <div class="quantity-control">
+            <button class="decrease">-</button>
+            <input type="number" value="1" min="1" class="quantity-input">
+            <button class="increase">+</button>
+        </div>
+        <button class="add-to-cart">Add to Cart</button>
+    `;
+
+    overlay.appendChild(detailsElement);
+    document.body.appendChild(overlay);
+
+    // Close modal when clicking outside or on close button
+    overlay.addEventListener("click", (e) => {
+        if (e.target === overlay || e.target.classList.contains("close-modal")) {
+            document.body.removeChild(overlay);
+        }
+    });
+
+    // Add event listeners for quantity control and add to cart
+    const decreaseBtn = detailsElement.querySelector(".decrease");
+    const increaseBtn = detailsElement.querySelector(".increase");
+    const quantityInput = detailsElement.querySelector(".quantity-input");
+    const addToCartBtn = detailsElement.querySelector(".add-to-cart");
+
+    decreaseBtn.addEventListener("click", () => {
+        if (quantityInput.value > 1) {
+            quantityInput.value = parseInt(quantityInput.value) - 1;
+        }
+    });
+
+    increaseBtn.addEventListener("click", () => {
+        quantityInput.value = parseInt(quantityInput.value) + 1;
+    });
+
+    addToCartBtn.addEventListener("click", async () => {
+        const quantity = parseInt(quantityInput.value);
+        try {
+            await upsertCartItem(item.item_id, quantity);
+            // Success handling (e.g., close modal, update UI)
+            document.body.removeChild(overlay);
+        } catch (error) {
+            console.error("Failed to add to cart:", error);
+            // Error handling (e.g., show error message to user)
+        }
+    });
+}
+
+
+async function upsertCartItem(itemId, quantity) {
+    try {
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+            throw new Error("User not logged in");
+        }
+
+        const response = await fetch("http://127.0.0.1:8080/cart/upsert", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                user_id: parseInt(userId),
+                item_id: parseInt(itemId),
+                quantity: parseInt(quantity)
+            })
+        });
+        const requestBody = {
+            user_id: parseInt(userId),
+            item_id: parseInt(itemId),
+            quantity: parseInt(quantity)
+        };
+        console.log("Request body:", requestBody);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Failed to add/update cart item: ${errorText}`);
+        }
+
+        const result = await response.json();
+        console.log("Cart item added/updated successfully:", result);
+        return result;
+    } catch (error) {
+        console.error("Error adding/updating cart item:", error);
+        throw error;
+    }
+}
+
 

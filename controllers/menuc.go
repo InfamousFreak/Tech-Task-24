@@ -35,7 +35,8 @@ func SearchMenuItemsByTags(c *fiber.Ctx) error {
 	}
 
 	var items []models.MenuItem
-	result := database.Db.Where("FIND_IN_SET(?, tags) > 0", tag).Find(&items)	if result.Error != nil {
+	result := database.Db.Where("tags LIKE ?", "%"+tag+"%").Find(&items)
+	if result.Error != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": result.Error.Error()})
 	}
 

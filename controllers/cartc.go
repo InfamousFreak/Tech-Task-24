@@ -8,35 +8,7 @@ import (
 	"github.com/InfamousFreak/Tech-Task-24/models"
 	"github.com/gofiber/fiber/v2"
 )
-/*func GetCartItems(c *fiber.Ctx) error {
-    // Get user ID from query parameter
-    userID, err := c.ParamsInt("user_id")
-    if err != nil {
-        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid user ID"})
-    }
 
-    // Check if the user exists
-    var user models.UserProfile
-    if err := database.Db.First(&user, userID).Error; err != nil {
-        if errors.Is(err, gorm.ErrRecordNotFound) {
-            return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "User not found"})
-        }
-        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Database error"})
-    }
-
-    // Retrieve cart items for the user
-    var cartItems []models.CartItem
-    if err := database.Db.Where("user_id = ?", userID).Find(&cartItems).Error; err != nil {
-        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to retrieve cart items"})
-    }
-
-    // If no items found, return an empty array instead of null
-    if len(cartItems) == 0 {
-        return c.JSON([]models.CartItem{})
-    }
-
-    return c.JSON(cartItems)
-}*/
 
 func GetCartItems(c *fiber.Ctx) error {
     // Get user ID from query parameter
@@ -127,3 +99,137 @@ func AddToCart(c *fiber.Ctx) error {
 
     return c.Status(fiber.StatusCreated).JSON(cartItem)
 }
+
+/*func UpdateCartItem(c *fiber.Ctx) error {
+    var cartItemUpdate struct {
+        UserID      uint `json:"user_id"`
+        MenuItemID  uint `json:"item_id"`
+        NewQuantity int  `json:"quantity"`
+    }
+    if err := c.BodyParser(&cartItemUpdate); err != nil {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid input"})
+    }
+    // Validate input
+    if cartItemUpdate.UserID == 0 || cartItemUpdate.MenuItemID == 0 || cartItemUpdate.NewQuantity <= 0 {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid cart item data"})
+    }
+    // Check if the user exists
+    var user models.UserProfile
+    if err := database.Db.First(&user, cartItemUpdate.UserID).Error; err != nil {
+        if errors.Is(err, gorm.ErrRecordNotFound) {
+            return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "User not found"})
+        }
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Database error"})
+    }
+    // Check if the menu item exists
+    var menuItem models.MenuItem
+    if err := database.Db.First(&menuItem, "menu_item_id = ?", cartItemUpdate.MenuItemID).Error; err != nil {
+        if errors.Is(err, gorm.ErrRecordNotFound) {
+            return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Menu item not found"})
+        }
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Database error"})
+    }
+    // Find the cart item to update
+    var cartItem models.CartItem
+    if err := database.Db.Where("user_id = ? AND menu_item_id = ?", cartItemUpdate.UserID, cartItemUpdate.MenuItemID).First(&cartItem).Error; err != nil {
+        if errors.Is(err, gorm.ErrRecordNotFound) {
+            return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Cart item not found"})
+        }
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Database error"})
+    }
+    // Update the quantity
+    cartItem.Quantity = cartItemUpdate.NewQuantity
+    if err := database.Db.Save(&cartItem).Error; err != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to update cart item"})
+    }
+    return c.Status(fiber.StatusOK).JSON(cartItem)
+}*/
+
+func UpsertCartItem(c *fiber.Ctx) error {
+    var cartItemUpdate struct {
+        UserID      uint `json:"user_id"`
+        MenuItemID  uint `json:"item_id"`
+        Quantity    int  `json:"quantity"`
+    }
+    
+    if err := c.BodyParser(&cartItemUpdate); err != nil {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid input"})
+    }
+
+    // Validate input
+    if cartItemUpdate.UserID == 0 || cartItemUpdate.MenuItemID == 0 || cartItemUpdate.Quantity <= 0 {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid cart item data"})
+    }
+
+    // Check if the user exists
+    var user models.UserProfile
+    if err := database.Db.First(&user, cartItemUpdate.UserID).Error; err != nil {
+        if errors.Is(err, gorm.ErrRecordNotFound) {
+            return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "User not found"})
+        }
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Database error"})
+    }
+
+    // Check if the menu item exists
+    var menuItem models.MenuItem
+    if err := database.Db.First(&menuItem, "menu_item_id = ?", cartItemUpdate.MenuItemID).Error; err != nil {
+        if errors.Is(err, gorm.ErrRecordNotFound) {
+            return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Menu item not found"})
+        }
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Database error"})
+    }
+
+    // Find or create the cart item
+    var cartItem models.CartItem
+    err := database.Db.Where("user_id = ? AND menu_item_id = ?", cartItemUpdate.UserID, cartItemUpdate.MenuItemID).First(&cartItem).Error
+    if errors.Is(err, gorm.ErrRecordNotFound) {
+        // Cart item doesn't exist, create a new one
+        cartItem = models.CartItem{
+            UserID:     cartItemUpdate.UserID,
+            MenuItemID: cartItemUpdate.MenuItemID,
+            Quantity:   cartItemUpdate.Quantity,
+        }
+        if err := database.Db.Create(&cartItem).Error; err != nil {
+            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to add item to cart"})
+        }
+    } else if err != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Database error"})
+    } else {
+        // Cart item exists, update the quantity
+        cartItem.Quantity = cartItemUpdate.Quantity
+        if err := database.Db.Save(&cartItem).Error; err != nil {
+            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to update cart item"})
+        }
+    }
+
+    return c.Status(fiber.StatusOK).JSON(cartItem)
+}
+
+func DeleteCartItem(c *fiber.Ctx) error {
+    var deleteRequest struct {
+        UserID     uint `json:"user_id"`
+        MenuItemID uint `json:"item_id"`
+    }
+
+    if err := c.BodyParser(&deleteRequest); err != nil {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid input"})
+    }
+
+    // Validate input
+    if deleteRequest.UserID == 0 || deleteRequest.MenuItemID == 0 {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid cart item data"})
+    }
+
+    // Delete the cart item
+    result := database.Db.Where("user_id = ? AND menu_item_id = ?", deleteRequest.UserID, deleteRequest.MenuItemID).Delete(&models.CartItem{})
+    if result.Error != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to delete cart item"})
+    }
+
+    if result.RowsAffected == 0 {
+        return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Cart item not found"})
+    }
+
+    return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Cart item deleted successfully"})
+}
+
