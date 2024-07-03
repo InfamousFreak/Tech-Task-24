@@ -4,6 +4,7 @@ import (
     "time"
     "errors"
     "gorm.io/gorm"
+    //"strconv"
 
 	"github.com/InfamousFreak/Tech-Task-24/models"
 	"github.com/InfamousFreak/Tech-Task-24/database"
@@ -181,3 +182,39 @@ func DeleteAdminProfile(c *fiber.Ctx) error {
         "message": "Admin deleted successfully",
     })
 }
+
+func AdminDeleteUserCartItem(c *fiber.Ctx) error {
+    var deleteRequest struct {
+        UserID     uint `json:"user_id"`
+        MenuItemID uint `json:"item_id"`
+    }
+
+    if err := c.BodyParser(&deleteRequest); err != nil {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid input"})
+    }
+
+    // Validate input
+    if deleteRequest.UserID == 0 || deleteRequest.MenuItemID == 0 {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid cart item data"})
+    }
+
+    // Check if the current user is an admin
+    adminID := c.Locals("userID")
+    var admin models.UserProfile
+    if err := database.Db.First(&admin, adminID).Error; err != nil {
+        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized"})
+    }
+
+    // Delete the cart item
+    result := database.Db.Where("user_id = ? AND menu_item_id = ?", deleteRequest.UserID, deleteRequest.MenuItemID).Delete(&models.CartItem{})
+    if result.Error != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to delete cart item"})
+    }
+
+    if result.RowsAffected == 0 {
+        return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "Cart item not found"})
+    }
+
+    return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Cart item deleted successfully by admin"})
+}
+

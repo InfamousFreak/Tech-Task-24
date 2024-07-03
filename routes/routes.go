@@ -30,4 +30,5 @@ func SetupRouter(app *fiber.App) {
     app.Get("/admin/profiles", controllers.GetAllAdminProfiles)
     app.Get("/profile/show", jwt, controllers.ShowProfiles) //admin privileges
     app.Delete("/admin/delete/:id", controllers.DeleteAdminProfile)
+    app.Delete("/admin/cart", controllers.AdminDeleteUserCartItem)
 }

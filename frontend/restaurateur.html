@@ -13,6 +13,7 @@
             h1 {
                 color: #333;
             }
+
             #userList {
                 background-color: white;
                 border-radius: 5px;
@@ -22,27 +23,50 @@
             .user-item {
                 border-bottom: 1px solid #eee;
                 padding: 10px 0;
+                position: relative;
+            }
+
+            .cart-container {
+                display: none;
+                background-color: #f9f9f9;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                padding: 10px;
+                margin-top: 10px;
+            }
+
+            .cart-container.show {
+                display:block;
+            }
+
+            .cart-toggle {
+                cursor:pointer;
+                color:blue;
+                text-decoration: underline;
+            }
+
+            .cart-item {
+                margin-bottom: 5px;
             }
             .user-item:last-child {
                 border-bottom: none;
             }
+
             #errorMessage {
                 color: red;
                 font-weight: bold;
             }
+
+
         </style>
     </head>
     <body>
         <div class="menu-items-admin" id="adminmenu">
             <a href="usermenu.html">Items on menu</a>
         </div>
-        <div class="users-admin" id="aduserlist">
-            <a href="userlist.html">Items on menu</a>
-        </div>
         <h1>User Profiles</h1>
         <div id="errorMessage"></div>
         <div id="userList"></div>
-
 
 
     <script src="admin.js"></script>
