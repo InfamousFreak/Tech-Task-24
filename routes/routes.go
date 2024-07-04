@@ -24,6 +24,9 @@ func SetupRouter(app *fiber.App) {
     app.Get("/cart/:user_id", controllers.GetCartItems)
     app.Put("/cart/upsert", controllers.UpsertCartItem) 
     app.Delete("/cart/delete", controllers.DeleteCartItem)
+    app.Post("/order", controllers.PlaceOrder)
+    app.Get("/order/history/:userID", controllers.GetOrderHistory)
+    app.Post("/cancel", controllers.CancelOrder)
 
 
     app.Post("/admin/signup", controllers.AdminSignup)
@@ -31,4 +34,7 @@ func SetupRouter(app *fiber.App) {
     app.Get("/profile/show", jwt, controllers.ShowProfiles) //admin privileges
     app.Delete("/admin/delete/:id", controllers.DeleteAdminProfile)
     app.Delete("/admin/cart", controllers.AdminDeleteUserCartItem)
+
+
+
 }

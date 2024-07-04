@@ -71,3 +71,19 @@ type CartItem struct {
     MenuItemID uint `gorm:"primaryKey" json:"item_id"`
     Quantity   int  `json:"quantity"`
 }
+
+type Order struct {
+    gorm.Model
+    UserID      uint    `json:"user_id"`
+    Status      string  `json:"status"`
+    TotalAmount float64 `json:"total_amount"`
+    OrderItems  []OrderItem `json:"order_items" gorm:"foreignKey:OrderID"`
+    TransactionID string 
+}
+
+type OrderItem struct {
+    gorm.Model
+    OrderID    uint  `json:"order_id"`
+    MenuItemID uint  `json:"item_id"`
+    Quantity   int   `json:"quantity"`
+}
