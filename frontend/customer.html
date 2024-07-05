@@ -10,24 +10,20 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-container">
-            <div class="navbar-title">
-                <a href="#">Foodium</a>
-            </div>
             <div class="navbar-links">
-                <a href="customer.html">Home</a>
-                <a href="https://github.com/InfamousFreak">About Us</a>
+                <div class="bord"><a href="https://github.com/InfamousFreak">About Us</a></div>
                 <a href="usermenu.html">Menu</a>
                 <a href="cart.html">Cart</a>
                 <a href="/logout">Logout</a>
             </div>
+            <div class="navbar-title">
+                <a href="customer.html">F<span style="color:#f27e3b">oo</span>diu<span style="color:#f27e3b">m</span></a>
+            </div>
             <div class="navbar-search-profile">
-                <input type="text" id="search-input" placeholder="Search tags...">
-                <button id="search-button">Search</button>
                 <img src="profile-icon.png" alt="Profile Icon" class="profile-icon" id="profile-button">
             </div>
         </div>
     </nav>
-
     <!-- User Details Section -->
     <div id="user-details" class="hidden">
         <h2>User Details</h2>
@@ -37,7 +33,8 @@
         </div>
         <div class="user-category">
             <h3>Order History</h3>
-            <p id="order-history"></p>
+            <button id="view-history-butn">View Order History</button>
+            <div id="order-history"></div>
         </div>
         <div class="user-category">
             <h3>Settings</h3>
@@ -45,11 +42,19 @@
         </div>
     </div>
 
-    <!-- Search Results Section -->
-    <div id="search-results" class="hidden">
-        <h2>Search Results</h2>
-        <ul id="results-list"></ul>
+
+    <div class="hmpageimg"><h1>Fresh from the kitchen <br>to your doorstep an<br>easy dinign solution </h1>
+    <h4>"Welcome to our Foodium! Enjoy delicious meals delivered to your doorstep."</h4></div>
+    <div class="searchitem">                
+        <input type="text" id="search-input" placeholder="Search tags...">
+        <button id="search-button">Go</button>
     </div>
+        <!-- Search Results Section -->
+        <div id="search-results" class="hidden">
+            <h2>Search Results</h2>
+            <ul id="results-list"></ul>
+        </div>
+    
 
     <script src="customer.js"></script>
 </body>

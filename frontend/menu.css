@@ -1,11 +1,11 @@
 body {
     background-color: #efebe0;
-
+    font-family : Verdana,Tahoma, sans-serif;
 }
 
 .section {
     padding: 50px 0;
-    background-color: #efebe0;
+    background-color:none;
 }
 
 .container {
@@ -14,8 +14,16 @@ body {
     padding: 0 20px;
 }
 
+.headertitle {
+    color: black;
+    font-size: 39px;
+    text-align:center;
+    margin-top:30px;
+    font-weight: bold;
+}
+
 .section-title {
-    font-size: 2rem;
+    font-size: 59px;
     text-align: center;
     margin-bottom: 30px;
 }
@@ -27,9 +35,9 @@ body {
 }
 
 .menu-item {
-    background-color: #fff;
+    background-color: rgb(250, 228, 202);
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 40px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
     overflow: hidden;
@@ -43,6 +51,7 @@ body {
     width: 100%;
     height: auto;
     margin-bottom: 10px;
+    border-radius:7%;
 }
 
 .menu-item-details h2 {
@@ -77,9 +86,9 @@ body {
 
 /* Modal content */
 .item-details-modal {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
+    background-color: bisque;
+    padding: 30px;
+    border-radius: 33px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     max-width: 500px;
     width: 90%;
@@ -110,6 +119,7 @@ body {
     max-width: 100%;
     height: auto;
     margin-bottom: 15px;
+    border-radius: 5%;
 }
 
 .item-details-modal p {
@@ -125,11 +135,12 @@ body {
 }
 
 .quantity-control button {
-    background-color: #f0f0f0;
+    background-color: #f27e3b;
     border: 1px solid #ddd;
-    padding: 5px 10px;
+    padding: 6px 10px;
     font-size: 16px;
     cursor: pointer;
+    border-radius: 30%;
 }
 
 .quantity-input {
@@ -137,22 +148,27 @@ body {
     text-align: center;
     margin: 0 10px;
     padding: 5px;
+    border: none;
+    height:24px;
+    border-radius:12px;
 }
 
 /* Add to cart button */
 .add-to-cart {
-    background-color: #4CAF50;
+    background-color: #f27e3b;
     color: white;
     border: none;
     padding: 10px 15px;
     font-size: 16px;
     cursor: pointer;
     border-radius: 4px;
-    width: 100%;
+    width: 500px;
+    border-radius:22px;
+    height: 44px;
 }
 
 .add-to-cart:hover {
-    background-color: #45a049;
+    background-color: #f6a271;
 }
 
 
