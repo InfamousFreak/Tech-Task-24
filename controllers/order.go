@@ -139,8 +139,8 @@ func CancelOrder(c *fiber.Ctx) error {
         return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid input"})
     }
 
-    // Start a transaction
-    tx := database.Db.Begin()
+        // Start a transaction
+        tx := database.Db.Begin()
 
     // Fetch the order
     var order models.Order

@@ -202,13 +202,17 @@ h4 {
     margin-top: 20px;
     padding: 20px;
     background-color: #f9f9f9;
-    border-radius: 8px;
+    border-radius: 15px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: 230px;
+    width: 700px;
+    margin-left: 580px;
 }
 
 #search-results h2 {
     color: #333;
     margin-bottom: 15px;
+
 }
 
 #search-results:not(.hidden) {
@@ -217,17 +221,24 @@ h4 {
 
 #results-list {
     list-style-type:none;
-    padding: 0;
+    padding: 0px;
 }
 
 #results-list li {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    border: solid 1px rgb(184, 184, 184);
+    font-size:20px;
+    padding: 15px;
+    width:660px;
+    height:60px;
+    border-radius:15px;
+
 }
 
 #results-list a {
-    color: #2196F3;
+    color: #f27e3b;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 #results-list a:hover {
@@ -262,3 +273,98 @@ h4 {
     margin-bottom: 5px;
 }
 
+.close-icon {
+    display: none;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: -60px;
+    margin-right: 20px;
+    margin-top:50px;
+    background-color: none;
+    padding:7px;
+    height:30px;
+    width:30px;
+    border-radius: 15px;
+    text-align:center; 
+    border: solid 1px rgb(184, 184, 184);
+  }
+  
+  .searchitem:hover .close-icon {
+    display: inline-block;
+  }
+  
+  .searchitem input[type="text"]:focus + .close-icon {
+    display: inline-block;
+  }
+
+  .slider-container {
+    width: 100%;
+    overflow: hidden;
+    margin-top: 120px;
+    margin-bottom: 120px;
+}
+
+.slider {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.slider-item {
+    flex: 0 0 200px;
+    margin-right: 20px;
+    text-align: center;
+
+}
+
+.slider-item p {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+.slider-item img {
+    width: 240px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+.footer {
+    position: relative;
+    background-color: #f5f0df;
+    color: #9f9575;
+    text-align: center;
+    padding: 40px 20px 20px;
+    overflow: hidden;
+    height: 20px;
+    font-size: 17px;
+}
+
+.footer-content {
+    position: relative;
+    z-index: 2;
+}
+
+.footer p {
+    margin-bottom: 20px;
+}
+
+.alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.5s;
+    background-color: white;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }

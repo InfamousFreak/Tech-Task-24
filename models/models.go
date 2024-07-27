@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/jinzhu/gorm"
+    "time"
 )
 
 type LoginRequest struct {
@@ -26,8 +27,6 @@ type UserProfile struct {
     Role           string `json:"role"`
     BusinessLicense string `json:"business_license"`
 }
-
-
 
 type Admin struct {
     gorm.Model
@@ -86,4 +85,13 @@ type OrderItem struct {
     OrderID    uint  `json:"order_id"`
     MenuItemID uint  `json:"item_id"`
     Quantity   int   `json:"quantity"`
+}
+
+type Transaction struct {
+    gorm.Model
+    UserID  uint `json:"user_id"`
+    OrderID uint `json:"order_id"`
+    Amount  float64 `json:"amount"`
+    Status  string `json:"status"` // e.g., "pending", "success", "failed"
+    CreatedAt time.Time `json:"created_at"`
 }

@@ -26,3 +26,11 @@ function showSlides() {
     slides[i].style.transform = `translateX(-${(slideIndex - 1) * 100}%)`;
   }
 }
+
+
+const button = document.getElementById('getstarted');
+
+button.addEventListener('click', function() {
+
+  window.location.href = 'login.html';
+});

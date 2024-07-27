@@ -51,9 +51,9 @@ func CreateUserProfile(c *fiber.Ctx) error {
     }
 
     claims := jwt.MapClaims{
-        "ID":    newUser.ID, // Use the default ID from gorm.Model
+        "ID":    newUser.ID, 
         "email": newUser.Email,
-        "exp":   time.Now().Add(time.Hour * 12).Unix(), // Token expires in 12 hours
+        "exp":   time.Now().Add(time.Hour * 12).Unix(),         
     }
     token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
     t, err := token.SignedString([]byte(config.Secret))

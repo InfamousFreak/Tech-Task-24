@@ -11,7 +11,7 @@ import (
 )
 
 func Load(key string) string {
-	//load .env file
+
 	err := godotenv.Load(".env")
 	if err != nil {
 		fmt.Print("Error loading .env file")
@@ -26,7 +26,6 @@ const AdminSecret = "secret"
 
 type GConfig struct {
 	GoogleLoginConfig oauth2.Config //defines a struct named config with a field googleloginconfig of type oauth2.config
-	//GitHubLoginConfig oauth2.Config
 }
 
 var AppConfig GConfig //global variable of type config
@@ -37,7 +36,7 @@ func GoogleConfig() oauth2.Config { //function googleconfig returns a struct oau
 		log.Fatalf("Some error occured. Err: %s", err) //if there is some error in loading the env file then it stops executing the program
 	}
 
-	AppConfig.GoogleLoginConfig = oauth2.Config{ //field and struct
+	AppConfig.GoogleLoginConfig = oauth2.Config{ 
 		RedirectURL:  "http://localhost:8080/google_callback", //redirect the user to the given url
 		ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),

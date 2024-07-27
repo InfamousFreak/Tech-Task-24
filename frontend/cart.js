@@ -169,9 +169,9 @@ async function placeOrder(userId) {
         console.log('Order placed successfully:', data);
         // Handle successful order placement (e.g., clear cart, show confirmation)
     } catch (error) {
-        console.error('Error placing order:', error);
-        // Handle error (e.g., show error message to user)
+        console.error('Error placing order:', error); 
     }
+    window.location.reload();  
 }
 
 async function cancelOrder(userId, orderId) {
@@ -196,4 +196,24 @@ async function cancelOrder(userId, orderId) {
         console.error('Error cancelling order:', error);
         // Handle error (e.g., show error message to user)
     }
+    window.location.reload();  
 }
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const logoutLink = document.querySelector('a[href="/logout"]');
+    if (logoutLink) {
+        logoutLink.addEventListener("click", (event) => {
+            event.preventDefault(); // Prevent default navigation behavior
+            // Perform logout actions
+            logoutUser();
+        });
+    }
+
+    function logoutUser() {
+        localStorage.removeItem('token'); // Remove JWT token from localStorage
+        // You can also clear sessionStorage if needed: sessionStorage.removeItem('token');
+        // Redirect to homepage
+        window.location.href = 'homepage.html'; // Replace with your homepage URL
+    }
+});

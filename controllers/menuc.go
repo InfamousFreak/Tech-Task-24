@@ -9,7 +9,7 @@ import (
 
 func GetMenuItems(c *fiber.Ctx) error {
 	var items []models.MenuItem
-	result := database.Db.Find(&items) //Find(&items) is a GORM method that populates items with the records
+	result := database.Db.Find(&items) 
 	if result.Error != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": result.Error.Error()})
 	}
@@ -28,19 +28,34 @@ func CreateMenuItem(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(item)
 }
 
-func SearchMenuItemsByTags(c *fiber.Ctx) error {
+/*func SearchMenuItemsByTags(c *fiber.Ctx) error {
 	tag := c.Query("tag") // this retrieves the query parameter named "tag" from the HTTP request, if fails to retrieve, an empty string will be returned
 	if tag == "" {        //checks if the string is empty
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Tag query parameter is required"})
 	}
 
 	var items []models.MenuItem
-	result := database.Db.Where("tags LIKE ?", "%"+tag+"%").Find(&items)
+	result := database.Db.Where("LOWER(tags) LIKE LOWER(?)", "%"+tag+"%").Find(&items)
 	if result.Error != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": result.Error.Error()})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(items) //if no error then sends a json response
+}*/
+func SearchMenuItemsByTags(c *fiber.Ctx) error {
+    partialTag := c.Query("tag")
+    if partialTag == "" {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Tag query parameter is required"})
+    }
+
+    var items []models.MenuItem
+    // Use LOWER() for case-insensitive search and LIKE for partial matching
+    result := database.Db.Where("LOWER(tags) LIKE LOWER(?)", "%"+partialTag+"%").Find(&items)
+    if result.Error != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": result.Error.Error()})
+    }
+
+    return c.Status(fiber.StatusOK).JSON(items)
 }
 
 
@@ -50,7 +65,6 @@ func UpdateMenuItem(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	// Extract the MenuItemID from the URL
 	id := c.Params("id")
 
 	// Find the menu item by its ID

@@ -12,14 +12,24 @@ document.addEventListener("DOMContentLoaded", () => {
 if (!searchResults) {
     console.error('Search results container not found in the DOM');
     return;
+
 }
+
+function isLoggedIn() {
+    const token = localStorage.getItem('token');
+    return !!token; // Returns true if token exists, false otherwise
+}       
 
     profileButton.addEventListener("click", async () => {
         userDetails.classList.toggle("hidden");
         if (!userDetails.classList.contains("hidden")) {
             try {
                 const token = localStorage.getItem('token');
-                // Decode the JWT token to get the user ID
+                if (!token) {
+                    throw new Error('No token found in localStorage');
+                }
+            
+
                 const payload = JSON.parse(atob(token.split('.')[1]));
                 const userId = payload.ID; // Assuming the ID is stored in the token payload
                 const response = await fetch(`http://127.0.0.1:8080/profile/${userId}/details`, {
@@ -74,6 +84,19 @@ if (!searchResults) {
                 });
         }
     }
+    const closeIcon = document.getElementById('close-icon');
+    
+    closeIcon.addEventListener('click', () => {
+      searchInput.value = '';
+    });
+    
+    searchInput.addEventListener('input', () => {
+      if (searchInput.value !== '') {
+        closeIcon.style.display = 'inline-block';
+      } else {
+        closeIcon.style.display = 'none';
+      }
+    });
 
     function displaySearchResults(items) {
         console.log('Received items:', items); // Log the received items
@@ -176,3 +199,90 @@ function displayOrderHistory(orders) {
     });
 }
 
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    
+    const slider = document.querySelector('.slider');
+    let isDragging = false;
+    let startPos = 0;
+    let currentTranslate = 0;
+    let prevTranslate = 0;
+    let animationID = 0;
+
+    // Sample menu items (replace with your actual data)
+    const menuItems = [
+        { name: "Chicken Burrito", image: "https://img.freepik.com/free-photo/side-view-shawarma-with-fried-potatoes-board-cookware_176474-3215.jpg?ga=GA1.1.1216645911.1718196968&semt=sph" },
+        { name: "CheeseBurger", image: "https://img.freepik.com/free-photo/sandwich-with-chicken-burger-tomatoes-lettuce_2829-16577.jpg?semt=sph" },
+        { name: "Caesar Salad", image: "https://img.freepik.com/free-photo/delicious-salad-red-plate-with-oil-high-angle-view-wooden-background_176474-3635.jpg?semt=ais_user" },
+        { name: "Margherita Pizza", image: "https://img.freepik.com/free-photo/top-view-pizza-wooden-stand-with-tablecloth_176474-2554.jpg?semt=ais_user" },
+        { name: "Butter Chicken", image: "https://img.freepik.com/premium-photo/chiken-dish_884653-13429.jpg?semt=ais_user" },
+        { name: "Litti Chokha", image: "https://qph.cf2.quoracdn.net/main-qimg-3f43722a6f4b1e0b4f6eda2f2037c4bb-lq" },
+        { name: "Sushi", image: "https://img.freepik.com/free-photo/fresh-sushi-with-red-caviar_140725-1264.jpg?t=st=1721542002~exp=1721545602~hmac=712f018378b91c2e670530312cc386521fe848f172f3ad84ce4718fe6aaf3554&w=740" },
+        { name: "Tacos", image: "https://img.freepik.com/free-photo/top-view-fresh-mexican-food-with-lime_23-2148614359.jpg?ga=GA1.1.1216645911.1718196968&semt=sph" },
+        { name: "Masala Dosa", image: "https://img.freepik.com/premium-photo/tasty-asian-food-plates-table_1037615-1882.jpg?ga=GA1.1.1216645911.1718196968&semt=ais_user" },
+        { name: "Samosa", image: "https://img.freepik.com/premium-photo/vegetarian-samosa-indian-special-traditional-street-food-punjabi-snack-generated-by-ai_1038983-13204.jpg?ga=GA1.1.1216645911.1718196968&semt=sph" }
+    ];
+
+    function populateSlider() {
+        menuItems.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'slider-item';
+            div.innerHTML = `
+                <img src="${item.image}" alt="${item.name}">
+                <p>${item.name}</p>
+            `;
+            slider.appendChild(div);
+        });
+    }
+
+    function setSliderPosition() {
+        slider.style.transform = `translateX(${currentTranslate}px)`;
+    }
+
+    function animation() {
+        setSliderPosition();
+        if (isDragging) requestAnimationFrame(animation);
+    }
+
+
+    function touchEnd() {
+        isDragging = false;
+        cancelAnimationFrame(animationID);
+        slider.style.cursor = 'grab';
+        
+        const movedBy = currentTranslate - prevTranslate;
+        if (movedBy < -100) {
+            currentTranslate -= 220; // Move to next item
+        } else if (movedBy > 100) {
+            currentTranslate += 220; // Move to previous item
+        }
+
+        // Ensure we don't scroll past the end or beginning
+        const maxTranslate = -(slider.scrollWidth - slider.clientWidth);
+        currentTranslate = Math.max(Math.min(currentTranslate, 0), maxTranslate);
+
+        setSliderPosition();
+        prevTranslate = currentTranslate;
+    }
+
+    // Populate the slider
+    populateSlider();
+
+    // Infinite scroll effect
+    setInterval(() => {
+        currentTranslate -= 1;
+        const maxTranslate = -(slider.scrollWidth - slider.clientWidth);
+        if (currentTranslate < maxTranslate) {
+            currentTranslate = 0;
+        }
+        setSliderPosition();
+        prevTranslate = currentTranslate;
+    }, 50);
+});
+
+
+document.getElementById('alert').style.display = 'block';
+setTimeout(function() {
+  document.getElementById('alert').style.display = 'none';
+}, 2000);   

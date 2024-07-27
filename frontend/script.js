@@ -51,9 +51,12 @@ function validateSignupForm() {
 }
 
 const signupbtn = document.getElementById('signup-buttom');
+signupbtn.addEventListener('click', validateSignupForm);			
 
 signupbtn.addEventListener('click', async function(event) {
 	event.preventDefault();
+
+
 	const email = document.getElementById('signEmail').value;
 	const password = document.getElementById('signPassword').value;
 	const name = document.getElementById('signName').value;
@@ -75,9 +78,13 @@ signupbtn.addEventListener('click', async function(event) {
 		
 		if (response.ok) {
 			
+			const { token, userId, } = await response.json();
+
+			localStorage.setItem('token', token);
+			localStorage.setItem('userId', userId);
 			console.log('Registration successful');
 			alert("Successfully signed up.");
-			window.location.hash = "#login";
+			window.location.href = "customer.html";
 			
 		  } else {
 			
@@ -113,9 +120,9 @@ signupbtn.addEventListener('click', async function(event) {
 	};*/
 
 	async function handleLoginSubmit(event) {
-		event.preventDefault(); // Prevent the default form submission
+		event.preventDefault(); 
 	  
-		// Get the email and password values from the form
+
 		const email = document.getElementById('logEmail').value;
 		const password = document.getElementById('logPassword').value;
 	  
@@ -135,7 +142,7 @@ signupbtn.addEventListener('click', async function(event) {
 			localStorage.setItem('token', token);
 			localStorage.setItem('userId', userId);
 			// Redirect the user to the "Hello User" page
-			window.location.href = 'hello.html';
+			window.location.href = 'customer.html';
 		  } else {
 			// Login failed
 			const error = await response.json();
@@ -163,7 +170,7 @@ signupbtn.addEventListener('click', async function(event) {
 							sessionStorage.setItem('authToken', data.token);
 	
 							// Redirect to protected page
-							window.location.href = 'http://127.0.0.1:8080/hello.html';
+							window.location.href = 'http://127.0.0.1:8080/customer.html';
 						} else {
 							console.error('Token not found in response:', data);
 						}

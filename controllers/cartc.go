@@ -189,6 +189,7 @@ func UpsertCartItem(c *fiber.Ctx) error {
             MenuItemID: cartItemUpdate.MenuItemID,
             Quantity:   cartItemUpdate.Quantity,
         }
+        
         if err := database.Db.Create(&cartItem).Error; err != nil {
             return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to add item to cart"})
         }

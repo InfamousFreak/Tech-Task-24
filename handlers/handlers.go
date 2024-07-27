@@ -7,7 +7,7 @@ import (
 	"time"
 	"encoding/json"
 	//"errors"
-	//"gorm.io/gorm"
+	"gorm.io/gorm"
 	
 	//"golang.org/x/crypto/bcrypt"
 	"github.com/InfamousFreak/Tech-Task-24/config"
@@ -35,18 +35,10 @@ func Login(c *fiber.Ctx) error {
         })
     }
 
-
-	if user.Role == "restaurateur" && user.BusinessLicense != loginRequest.BusinessLicense {
-        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-            "error": "Invalid license number",
-        })
-    }
-
 	tokenExpiration := time.Now().Add(time.Hour * 12)
 	claims := jwt.MapClaims{
 		"ID":    user.ID,
 		"email": user.Email,
-		"role": user.Role,
 		"exp":   tokenExpiration.Unix(),
 	}
 	
@@ -81,77 +73,83 @@ func GoogleLogin(c *fiber.Ctx) error {
 
 
 func GoogleCallback(c *fiber.Ctx) error {
-	state := c.Query("state")
-	if state != "randomstate" {
-		return c.SendString("States don't Match!!")
-	}
+    state := c.Query("state")
+    if state != "randomstate" {
+        return c.Status(fiber.StatusBadRequest).SendString("Invalid state")
+    }
 
-	code := c.Query("code")
+    code := c.Query("code")
+    googleConfig := config.GoogleConfig()
+    token, err := googleConfig.Exchange(context.Background(), code)
+    if err != nil {
+        return c.Status(fiber.StatusBadRequest).SendString("Code-Token exchange failed")
+    }
 
-	googlecon := config.GoogleConfig()
+    resp, err := http.Get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token.AccessToken)
+    if err != nil {
+        return c.Status(fiber.StatusInternalServerError).SendString("Failed to retrieve user data")
+    }
+    defer resp.Body.Close()
 
-	token, err := googlecon.Exchange(context.Background(), code)
-	if err != nil {
-		return c.SendString("Code-Token Exchange Failed")
-	}
+    userData, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        return c.Status(fiber.StatusInternalServerError).SendString("Failed to read user data")
+    }
 
-	resp, err := http.Get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token.AccessToken)
-	if err != nil {
-		return c.SendString("Cannot retrieve the user data")
-	}
-	defer resp.Body.Close()
+    var user models.UserProfile
+    if err := json.Unmarshal(userData, &user); err != nil {
+        return c.Status(fiber.StatusInternalServerError).SendString("Failed to parse user data")
+    }
 
-	userData, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return c.SendString("JSON Parsing Failed")
-	}
-	 var newUser models.UserProfile
-	 json.Unmarshal(userData,&newUser)
-	 if err:=database.Db.Where("email = ?", newUser.Email).First(&newUser).Error;err!=nil{
-		result := database.Db.Create(&newUser)
-		if result.Error != nil {
-			c.Status(400).JSON(&fiber.Map{
-				"data":    nil,
-				"success": false,
-				"message": result.Error,
-			})
-			return result.Error
-		}
-		if result.Error != nil {
-			c.Status(400).JSON(&fiber.Map{
-				"data":    nil,
-				"success": false,
-				"message": result.Error,
-			})
-			return result.Error
-		}
-		//return nil,errors.New("user is not found")
-		newUser.Role="customer";
-	}
-	
+    // Check if user exists, if not create a new user
+    var existingUser models.UserProfile
+    result := database.Db.Where("email = ?", user.Email).First(&existingUser)
+    if result.Error != nil {
+        if result.Error == gorm.ErrRecordNotFound {
+            // Create new user
+            if err := database.Db.Create(&user).Error; err != nil {
+                return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+                    "success": false,
+                    "message": "Failed to create user",
+                    "error":   err.Error(),
+                })
+            }
+        } else {
+            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+                "success": false,
+                "message": "Database error",
+                "error":   result.Error.Error(),
+            })
+        }
+    } else {
+        user = existingUser
+    }
 
-	day:=time.Hour*24;
-	claims:=jwt.MapClaims{
-		"ID": newUser.ID,
-		"email":newUser.Email,
-		"role":newUser.Role,
-		"expi":time.Now().Add(day*1).Unix(),
-	}
-	token2:=jwt.NewWithClaims(jwt.SigningMethodHS256,claims)
-	t,err:=token2.SignedString([]byte(config.Secret))
-	if err != nil{
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{ "error":err.Error(),})
-	}
-	return c.JSON(models.LoginResponse{
-		Token:t,
-	})
+    // Generate JWT
+    jwtToken, err := generateJWT(user)
+    if err != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+            "success": false,
+            "message": "Failed to generate token",
+            "error":   err.Error(),
+        })
+    }
 
+    return c.JSON(models.LoginResponse{
+        Token: jwtToken,
+    })
 }
 
-
-
-
-
+func generateJWT(user models.UserProfile) (string, error) {
+    day := time.Hour * 24
+    claims := jwt.MapClaims{
+        "ID":    user.ID,
+        "email": user.Email,
+        "exp":   time.Now().Add(day * 1).Unix(),
+    }
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+    return token.SignedString([]byte(config.Secret))
+}
 func AdminLogin(c *fiber.Ctx) error {
     loginRequest := new(models.AdminLoginRequest)
     if err := c.BodyParser(loginRequest); err != nil {

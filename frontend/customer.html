@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="customer.css">
 </head>
 <body>
+    <div id="alert" class="alert alert-success" role="alert">
+        Logged in successfully!
+      </div>
     <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-container">
@@ -46,14 +49,27 @@
     <div class="hmpageimg"><h1>Fresh from the kitchen <br>to your doorstep an<br>easy dinign solution </h1>
     <h4>"Welcome to our Foodium! Enjoy delicious meals delivered to your doorstep."</h4></div>
     <div class="searchitem">                
-        <input type="text" id="search-input" placeholder="Search tags...">
+        <input type="text" id="search-input" placeholder="Search tags..." >
+        <span class="close-icon" id="close-icon">X</span>
         <button id="search-button">Go</button>
+        
     </div>
         <!-- Search Results Section -->
         <div id="search-results" class="hidden">
-            <h2>Search Results</h2>
+            <h2>Search Results </h2>
             <ul id="results-list"></ul>
         </div>
+        <div class="slider-container">
+            <div class="slider">
+                <!-- We'll populate this dynamically with JavaScript -->
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2024 Foodium. All rights reserved.</p>
+            </div>
+        </footer>
+    
     
 
     <script src="customer.js"></script>
