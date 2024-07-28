@@ -2,12 +2,13 @@ package handlers
 
 import (
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 	"encoding/json"
 	//"errors"
-	"gorm.io/gorm"
+    "fmt"
+    //"gorm.io/gorm"
 	
 	//"golang.org/x/crypto/bcrypt"
 	"github.com/InfamousFreak/Tech-Task-24/config"
@@ -72,84 +73,123 @@ func GoogleLogin(c *fiber.Ctx) error {
 }
 
 
-func GoogleCallback(c *fiber.Ctx) error {
+
+/*func GoogleCallback(c *fiber.Ctx) error {
     state := c.Query("state")
     if state != "randomstate" {
-        return c.Status(fiber.StatusBadRequest).SendString("Invalid state")
+        return c.SendString("States don't Match!!")
     }
+
 
     code := c.Query("code")
-    googleConfig := config.GoogleConfig()
-    token, err := googleConfig.Exchange(context.Background(), code)
-    if err != nil {
-        return c.Status(fiber.StatusBadRequest).SendString("Code-Token exchange failed")
+    googlecon := config.GoogleConfig()
+    token, err := googlecon.Exchange(context.Background(), code)
+   if err != nil {
+   return c.SendString("Code-Token Exchange Failed")
     }
-
     resp, err := http.Get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token.AccessToken)
-    if err != nil {
-        return c.Status(fiber.StatusInternalServerError).SendString("Failed to retrieve user data")
+   if err != nil {
+   return c.SendString("Cannot retrieve the user data")
     }
-    defer resp.Body.Close()
-
-    userData, err := ioutil.ReadAll(resp.Body)
-    if err != nil {
-        return c.Status(fiber.StatusInternalServerError).SendString("Failed to read user data")
+   defer resp.Body.Close()
+    userData, err := io.ReadAll(resp.Body)
+   if err != nil {
+   return c.SendString("JSON Parsing Failed")
     }
-
-    var user models.UserProfile
-    if err := json.Unmarshal(userData, &user); err != nil {
-        return c.Status(fiber.StatusInternalServerError).SendString("Failed to parse user data")
-    }
-
-    // Check if user exists, if not create a new user
-    var existingUser models.UserProfile
-    result := database.Db.Where("email = ?", user.Email).First(&existingUser)
-    if result.Error != nil {
-        if result.Error == gorm.ErrRecordNotFound {
-            // Create new user
-            if err := database.Db.Create(&user).Error; err != nil {
-                return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-                    "success": false,
-                    "message": "Failed to create user",
-                    "error":   err.Error(),
-                })
-            }
-        } else {
-            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-                "success": false,
-                "message": "Database error",
-                "error":   result.Error.Error(),
-            })
-        }
-    } else {
-        user = existingUser
-    }
-
-    // Generate JWT
-    jwtToken, err := generateJWT(user)
-    if err != nil {
-        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-            "success": false,
-            "message": "Failed to generate token",
-            "error":   err.Error(),
-        })
-    }
-
-    return c.JSON(models.LoginResponse{
-        Token: jwtToken,
+   var newUser models.UserProfile
+    json.Unmarshal(userData, &newUser)
+   if err := database.Db.Where("email = ?", newUser.Email).First(&newUser).Error; err != nil {
+    result := database.Db.Create(&newUser)
+   if result.Error != nil {
+    c.Status(400).JSON(&fiber.Map{
+   "data": nil,
+   "success": false,
+   "message": result.Error,
     })
-}
-
-func generateJWT(user models.UserProfile) (string, error) {
+   return result.Error
+    }
+    database.Db.Save(&newUser)
+    }
     day := time.Hour * 24
     claims := jwt.MapClaims{
-        "ID":    user.ID,
-        "email": user.Email,
-        "exp":   time.Now().Add(day * 1).Unix(),
+   "ID": newUser.ID,
+   "email": newUser.Email,
+   "expi": time.Now().Add(day * 1).Unix(),
     }
-    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-    return token.SignedString([]byte(config.Secret))
+    token2 := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+    t, err := token2.SignedString([]byte(config.Secret))
+   if err != nil {
+   return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+    }
+    fmt.Println()
+   return c.JSON(models.LoginResponse{
+    Token: t,
+    })
+   }*/
+
+   func GoogleCallback(c *fiber.Ctx) error {
+	state := c.Query("state")
+	if state != "randomstate" {
+		return c.SendString("States don't Match!!")
+	}
+
+	code := c.Query("code")
+
+	googlecon := config.GoogleConfig()
+
+	token, err := googlecon.Exchange(context.Background(), code)
+	if err != nil {
+		return c.SendString("Code-Token Exchange Failed")
+	}
+
+	resp, err := http.Get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token.AccessToken)
+	if err != nil {
+		return c.SendString("Cannot retrieve the user data")
+	}
+	defer resp.Body.Close()
+
+	userData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return c.SendString("JSON Parsing Failed")
+	}
+	var newUser models.UserProfile
+	json.Unmarshal(userData, &newUser)
+	if err := database.Db.Where("email = ?", newUser.Email).First(&newUser).Error; err != nil {
+		result := database.Db.Create(&newUser)
+		if result.Error != nil {
+			c.Status(400).JSON(&fiber.Map{
+				"data":    nil,
+				"success": false,
+				"message": result.Error,
+			})
+			return result.Error                                             
+		}
+		database.Db.Save(&newUser)
+	}
+
+	day := time.Hour * 24
+	claims := jwt.MapClaims{
+		"ID":    newUser.ID,
+		"email": newUser.Email,
+		"expi":  time.Now().Add(day * 1).Unix(),
+	}
+	token2 := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	t, err := token2.SignedString([]byte(config.Secret))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	fmt.Println()
+	return c.JSON(models.LoginResponse{
+		Token: t,
+	})
+
 }
+
+
+
+
+
+
 func AdminLogin(c *fiber.Ctx) error {
     loginRequest := new(models.AdminLoginRequest)
     if err := c.BodyParser(loginRequest); err != nil {

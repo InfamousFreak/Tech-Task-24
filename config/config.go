@@ -37,7 +37,7 @@ func GoogleConfig() oauth2.Config { //function googleconfig returns a struct oau
 	}
 
 	AppConfig.GoogleLoginConfig = oauth2.Config{ 
-		RedirectURL:  "http://localhost:8080/google_callback", //redirect the user to the given url
+		RedirectURL:  "http://127.0.0.1:8080/google_callback", //redirect the user to the given url
 		ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
 		Scopes: []string{"https://www.googleapis.com/auth/userinfo.email", //bunch of scope requests from the users the email and profile of the user

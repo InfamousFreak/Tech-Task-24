@@ -54,32 +54,4 @@ func main() {
 
 }
 
-/*func selectRole(c *fiber.Ctx) error {
-    var roleSelection struct {
-        UserID         uint   `json:"user_id"`
-        Role           string `json:"role"`
-        BusinessLicense string `json:"business_license"`
-    }
-    if err := c.BodyParser(&roleSelection); err != nil {
-        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
-    }
-    var user UserProfile
-    if err := db.First(&user, roleSelection.UserID).Error; err != nil {
-        return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "user not found"})
-    }
-    user.Role = roleSelection.Role
-    if roleSelection.Role == "Restaurateur" {
-        if roleSelection.BusinessLicense == "" {
-            return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "business license required"})
-        }
-        user.BusinessLicense = roleSelection.BusinessLicense
-    }
-    db.Save(&user)
-    if roleSelection.Role == "Customer" {
-        return c.Redirect("/customer.html")
-    } else if roleSelection.Role == "Restaurateur" {
-        return c.Redirect("/restaurateur.html")
-    }
-    return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "invalid role"})
-}*/
 
