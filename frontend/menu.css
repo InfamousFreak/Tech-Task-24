@@ -41,6 +41,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
     overflow: hidden;
+    margin-top: 20px;
 }
 
 .menu-item:hover {
@@ -200,7 +201,8 @@ body{
 }
 
 h2 {
-    display:inline-block;
+    text-align: center;
+    font-size: 30px;
 }
 
 * {

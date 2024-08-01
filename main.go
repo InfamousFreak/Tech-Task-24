@@ -25,7 +25,7 @@ func main() {
 
 	app.Use(cors.New(cors.Config{
         AllowCredentials: true,
-        AllowOrigins: "http://127.0.0.1:5500", 
+        AllowOrigins: "http://127.0.0.1:5501", 
         AllowHeaders: "Origin, Content-Type, Accept, Authorization",
     }))
 	app.Static("/", "/frontend")

@@ -3,9 +3,6 @@ body{
     padding: 0;
     font-family : Verdana,Tahoma, sans-serif;
     background-color: #EFEBE0;
-    background-repeat: no repeat;
-    background-size: cover;
-    background-blend-mode: soft-light;
 }
 
 h2 {
@@ -57,8 +54,6 @@ h2 {
 #remember {
     margin-left:80px;
 }
-
-
 
 .box{
     width: 700px;
@@ -294,25 +289,6 @@ hr {
 
 }
 
-#user-role {
-    height:40px;
-    width:200px;
-    margin-top:20px;
-    border-radius:15px;
-    padding:8px;
-}
-
-#licenseField {
-    margin-top: 40px;
-    font-size:20px;
-
-}
-
-#businessLicense {
-    width:400px;
-    margin-left:120px;
-    margin-top:10px;
-}
 
 .menu-items-admin {
     border: 2px solid black;
@@ -332,6 +308,20 @@ hr {
 .menu-items-admin:hover {
     transform: translateY(-3%);
 }
+
+.password-wrapper {
+    position: relative;
+    display: inline-block;                                      
+}
+
+.toggle-password {
+    position: absolute;
+    right:1850px;
+    top: -59%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
 
 
   

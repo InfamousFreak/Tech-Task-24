@@ -3,8 +3,8 @@ package database
 import (
 	"fmt"
 	"log"
-	"strconv"
-
+	"strconv"	
+	
 	"github.com/InfamousFreak/Tech-Task-24/config"
 	"github.com/InfamousFreak/Tech-Task-24/models"
 	"gorm.io/driver/postgres"
@@ -19,7 +19,7 @@ func Convert(port string) uint {
 	return uint(u64)
 }
 
-var Db *gorm.DB
+var Db *gorm.DB			
 
 func InitDB() error {
 	// Extracting the configuration
@@ -28,7 +28,7 @@ func InitDB() error {
 	user := config.Load("DB_USER")
 	password := config.Load("DB_PASSWORD")
 	dbname := config.Load("DB_NAME")
-
+	
 	// Print the config to ensure they're correctly set
 	fmt.Printf("Connecting to DB with host=%s port=%s user=%s password=%s dbname=%s\n", host, port, user, password, dbname)
 

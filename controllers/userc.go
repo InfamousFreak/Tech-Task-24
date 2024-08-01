@@ -103,7 +103,6 @@ func sanitizeUserData(user *models.UserProfile) fiber.Map {
         "email":           user.Email,
         "city":            user.City,
         "role":            user.Role,
-        "businessLicense": user.BusinessLicense,
     }
 }
 

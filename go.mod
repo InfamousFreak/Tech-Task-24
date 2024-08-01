@@ -3,7 +3,7 @@ module github.com/InfamousFreak/Tech-Task-24
 go 1.22.3
 
 require (
-	github.com/gofiber/fiber/v2 v2.52.4
+	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/jinzhu/gorm v1.9.16
 	golang.org/x/crypto v0.14.0
 )

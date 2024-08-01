@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const userDetails = document.getElementById("user-details");
     const profileInfo = document.getElementById("profile-info");
     const orderHistory = document.getElementById("order-history");
-    const settings = document.getElementById("settings");
     const searchButton = document.getElementById('search-button');
     const searchInput = document.getElementById('search-input');
     const resultsList = document.getElementById('results-list');
@@ -45,13 +44,11 @@ function isLoggedIn() {
                 let profileText = `Name: ${userData.data.name}<br><br>Email: ${userData.data.email}`;
                 if (userData.data.city) profileText += `<br><br>City: ${userData.data.city}`;
                 if (userData.data.role) profileText += `<br><br>Role: ${userData.data.role}`;
-                if (userData.data.businessLicense) profileText += `<br><br>Business License: ${userData.data.businessLicense}`;
                 profileInfo.innerHTML = profileText;// Update this as needed
             } catch (error) {
                 console.error('Failed to fetch user details:', error);
                 profileInfo.textContent = "Failed to load user details.";
                 orderHistory.textContent = "";
-                settings.textContent = "";
             }
         }
     });
@@ -109,7 +106,7 @@ function isLoggedIn() {
                 console.log('Processing item:', item); // Log each item
                 const li = document.createElement('li');
                 const a = document.createElement('a');
-                a.href = `/menu-item/${item.item_id}`;
+                a.href = `/frontend/usermenu.html`;
                 a.textContent = item.name;
                 li.appendChild(a);
                 resultsList.appendChild(li);
@@ -193,7 +190,7 @@ function displayOrderHistory(orders) {
                     <li>Item ID: ${item.item_id}, Quantity: ${item.quantity}</li>
                 `).join('')}
             </ul>
-            <button onclick="cancelOrder(${order.user_id}, ${order.ID})">Cancel Order</button>
+            <button class="cancelorder" onclick="cancelOrder(${order.user_id}, ${order.ID})">Cancel Order</button>
         `;
         orderHistoryContainer.appendChild(orderElement);
     });

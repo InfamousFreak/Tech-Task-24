@@ -7,7 +7,7 @@ import (
 	"time"
 	"encoding/json"
 	//"errors"
-    "fmt"
+    //                      "fmt"
     //"gorm.io/gorm"
 	
 	//"golang.org/x/crypto/bcrypt"
@@ -127,63 +127,69 @@ func GoogleLogin(c *fiber.Ctx) error {
     })
    }*/
 
-   func GoogleCallback(c *fiber.Ctx) error {
-	state := c.Query("state")
-	if state != "randomstate" {
-		return c.SendString("States don't Match!!")
-	}
+    func GoogleCallback(c *fiber.Ctx) error {
+        state := c.Query("state")
+        if state != "randomstate" {
+            return c.SendString("States don't Match!!")
+        }
 
-	code := c.Query("code")
+        code := c.Query("code")
 
-	googlecon := config.GoogleConfig()
+        googlecon := config.GoogleConfig()
 
-	token, err := googlecon.Exchange(context.Background(), code)
-	if err != nil {
-		return c.SendString("Code-Token Exchange Failed")
-	}
+        token, err := googlecon.Exchange(context.Background(), code)
+        if err != nil {
+            return c.SendString("Code-Token Exchange Failed")
+        }
 
-	resp, err := http.Get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token.AccessToken)
-	if err != nil {
-		return c.SendString("Cannot retrieve the user data")
-	}
-	defer resp.Body.Close()
+        resp, err := http.Get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token.AccessToken)
+        if err != nil {
+            return c.SendString("Cannot retrieve the user data")
+        }
+        defer resp.Body.Close()
 
-	userData, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return c.SendString("JSON Parsing Failed")
-	}
-	var newUser models.UserProfile
-	json.Unmarshal(userData, &newUser)
-	if err := database.Db.Where("email = ?", newUser.Email).First(&newUser).Error; err != nil {
-		result := database.Db.Create(&newUser)
-		if result.Error != nil {
-			c.Status(400).JSON(&fiber.Map{
-				"data":    nil,
-				"success": false,
-				"message": result.Error,
-			})
-			return result.Error                                             
-		}
-		database.Db.Save(&newUser)
-	}
+        userData, err := io.ReadAll(resp.Body)
+        if err != nil {
+            return c.SendString("JSON Parsing Failed")
+        }
+        var User models.UserProfile
+        json.Unmarshal(userData, &User)
+        if err := database.Db.Where("email = ?", User.Email).First(&User).Error; err != nil {
+            result := database.Db.Create(&User)
+            if result.Error != nil {
+                c.Status(400).JSON(&fiber.Map{
+                    "data":    nil,
+                    "success": false,
+                    "message": result.Error,
+                })
+                return result.Error                                             
+            }
+            database.Db.Save(&User)
+        }
 
-	day := time.Hour * 24
-	claims := jwt.MapClaims{
-		"ID":    newUser.ID,
-		"email": newUser.Email,
-		"expi":  time.Now().Add(day * 1).Unix(),
-	}
-	token2 := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	t, err := token2.SignedString([]byte(config.Secret))
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-	}
-	fmt.Println()
-	return c.JSON(models.LoginResponse{
-		Token: t,
-	})
+        day := time.Hour * 24
+        claims := jwt.MapClaims{
+            "ID":    User.ID,
+            "email": User.Email,
+            "name" : User.Name,
+            "expi":  time.Now().Add(day * 1).Unix(),
+        }
+        token2 := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+        t, err := token2.SignedString([]byte(config.Secret))
+        if err != nil {
+            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+        }
 
-}
+        c.Cookie(&fiber.Cookie{
+            Name:     "token",
+            Value:    t,
+            Expires:  time.Now().Add(day * 1),
+        })
+
+        redirectUrl := "http://127.0.0.1:5501/frontend/customer.html"
+	    return c.Redirect(redirectUrl, fiber.StatusSeeOther)
+
+    }
 
 
 
@@ -244,4 +250,20 @@ func ProtectedAdmin(c *fiber.Ctx) error {
     return c.SendString("Welcome, Admin")
 }	
 
+
+/*func CheckAuth(c *fiber.Ctx) error {
+    cookie := c.Cookies("token")
+    if cookie == "" {
+        return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+            "authenticated": false,
+        })
+    }
+
+    // Verify the JWT token here
+    // If valid, return success. If not, return unauthorized
+
+    return c.JSON(fiber.Map{
+        "authenticated": true,
+    })
+}*/
 

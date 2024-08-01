@@ -22,18 +22,31 @@
             <div class="content">
                 <form class="login" name="loginForm" onsubmit="return handleLoginSubmit(event)" method="POST">
                     <input type="email" name="email" id="logEmail" placeholder="Email">
-                    <input type="password" name="password" id="logPassword" placeholder="Password">
-                    <div id="check">
-                        <input type="checkbox" id="remember">
-                        <label for="remember">Remember me</label>
-                    </div>
+                    <div class="password-wrapper">
+                        <input type="password" name="password" id="logPassword" placeholder="Password">
+                        <span class="toggle-password" onclick="togglePasswordVisibility('logPassword')">
+                            <svg id="logEyeIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM8 3c-2.5 0-4.755 1.755-6.222 3.847C3.245 9.245 5.5 11 8 11s4.755-1.755 6.222-3.847C12.755 4.755 10.5 3 8 3z"/>
+                                <path d="M8 5a3 3 0 100 6 3 3 0 000-6z"/>
+                            </svg>
+                        </span>
+                    </div>                
                     <br><br>
                     <input id="login-buttom" type="submit" value="Login">
                 </form>
                 <form class="signup" name="signupForm" onsubmit="return validateSignupForm()" method="POST">
-                    <input type="email" name="email" id="signEmail" placeholder="Email">
+                    <input type="email" name="email" id="signEmail" placeholder="Email">                        
                     <input type="text" name="name" id="signName" placeholder="Username">
-                    <input type="password" name="password" id="signPassword" placeholder="Password"><br>
+                    <div class="password-wrapper">
+                        <input type="password" name="password" id="signPassword" placeholder="Password">
+                        <span class="toggle-password" onclick="togglePasswordVisibility('signPassword')">
+                            <svg id="signEyeIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM8 3c-2.5 0-4.755 1.755-6.222 3.847C3.245 9.245 5.5 11 8 11s4.755-1.755 6.222-3.847C12.755 4.755 10.5 3 8 3z"/>
+                                <path d="M8 5a3 3 0 100 6 3 3 0 000-6z"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <br>
                     <input id="signup-buttom" type="submit" value="SignUp">
                 </form>
             </div>
@@ -47,8 +60,8 @@
                 <p>Or Connect with</p>
                 <div class="icons">
                     <button id="google-authBtn" class="google">
-                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="29" height="29" viewBox="0 0 48 48">
-                            <path d="M23 21.5v5c0 .828.671 1.5 1.5 1.5h10.809c-.499 1.416-1.256 2.698-2.205 3.805l6.033 5.229C42.159 33.529 44 28.98 44 24c0-.828-.064-1.688-.202-2.702C43.697 20.555 43.062 20 42.312 20H24.5C23.671 20 23 20.672 23 21.5zM12.612 27.761C12.22 26.577 12 25.314 12 24s.22-2.577.612-3.761l-6.557-5.014C4.752 17.878 4 20.849 4 24s.752 6.122 2.056 8.775L12.612 27.761zM30.865 33.835C28.906 35.204 26.532 36 24 36c-4.212 0-7.917-2.186-10.059-5.478l-6.362 4.865C11.195 40.585 17.202 44 24 44c4.968 0 9.508-1.832 13.009-4.84L30.865 33.835zM37.515 9.297C33.813 5.881 29.013 4 24 4c-6.798 0-12.805 3.415-16.421 8.614l6.362 4.865C16.083 14.186 19.788 12 24 12c2.944 0 5.776 1.081 7.974 3.043.593.53 1.498.504 2.06-.059l3.525-3.524c.289-.288.447-.683.439-1.091C37.99 9.961 37.815 9.574 37.515 9.297z"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="29" height="29" viewBox="0 0 48 48">
+                        <path d="M23 21.5v5c0 .828.671 1.5 1.5 1.5h10.809c-.499 1.416-1.256 2.698-2.205 3.805l6.033 5.229C42.159 33.529 44 28.98 44 24c0-.828-.064-1.688-.202-2.702C43.697 20.555 43.062 20 42.312 20H24.5C23.671 20 23 20.672 23 21.5zM12.612 27.761C12.22 26.577 12 25.314 12 24s.22-2.577.612-3.761l-6.557-5.014C4.752 17.878 4 20.849 4 24s.752 6.122 2.056 8.775L12.612 27.761zM30.865 33.835C28.906 35.204 26.532 36 24 36c-4.212 0-7.917-2.186-10.059-5.478l-6.362 4.865C11.195 40.585 17.202 44 24 44c4.968 0 9.508-1.832 13.009-4.84L30.865 33.835zM37.515 9.297C33.813 5.881 29.013 4 24 4c-6.798 0-12.805 3.415-16.421 8.614l6.362 4.865C16.083 14.186 19.788 12 24 12c2.944 0 5.776 1.081 7.974 3.043.593.53 1.498.504 2.06-.059l3.525-3.524c.289-.288.447-.683.439-1.091C37.99 9.961 37.815 9.574 37.515 9.297z"></path>
                         </svg>
                     </button>
                 </div>

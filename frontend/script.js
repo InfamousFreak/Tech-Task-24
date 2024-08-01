@@ -96,28 +96,6 @@ signupbtn.addEventListener('click', async function(event) {
 	
 	});
 
-/*async function GoogleAuthURL() {
-	try {
-		const response = await fetch('http://localhost:8080/google_login');
-		if (response.ok) {
-			const data = await response.json();
-			return data.authURL;
-		} else {
-			console.error ('Failed to get Google Authentication URL');
-		}
-	} catch (error) {
-				console.error ('Network error:', error);
-	}
-}
-
-	document.getElementById('google-authBtn').onclick = async function () {
-		const authURL = await GoogleAuthURL();
-		if (authURL) {
-			window.location.href = 'http://localhost:8080/google_login';
-		} else {
-			console.error('Failed to get Google authentication URL');
-		}
-	};*/
 
 	async function handleLoginSubmit(event) {
 		event.preventDefault(); 
@@ -153,32 +131,80 @@ signupbtn.addEventListener('click', async function(event) {
 		  document.getElementById('errorMsg').textContent = 'An error occurred during login';
 		}
 	  }
+		
+	// Update this URL to match your backend's Google OAuth URL
+	/*const params = new URLSearchParams(window.location.search);
+			const code = params.get('code');
+			const state = params.get('state');
+	
+			if (code && state) {
+				try {
+					const response = await fetch(`http://127.0.0.1:8081/google_callback?code=${code}&state=${state}`);
+					const data = await response.json();
+	
+					if (data.token) {
+						// Store the token in session storage
+						sessionStorage.setItem('authToken', data.token);
+	
+						// Redirect to protected page
+						window.location.href = 'http://127.0.0.1:8080/customer.html';
+					} else {
+						console.error('Token not found in response:', data);
+					}
+				} catch (error) {
+					console.error('Failed to fetch token:', error);
+				}						
+			}*/
 
-	  document.getElementById('google-authBtn').addEventListener('click', async function() {
-		window.location.href = 'http://127.0.0.1:8080/google_login'; // Update this URL to match your backend's Google OAuth URL
-		const params = new URLSearchParams(window.location.search);
+
+			document.getElementById('google-authBtn').addEventListener('click', async function(event) {
+				event.preventDefault();
+				window.location.href = 'http://127.0.0.1:8080/google_login'; 
+				const params = new URLSearchParams(window.location.search);
 				const code = params.get('code');
 				const state = params.get('state');
-	
-				if (code && state) {
-					try {
-						const response = await fetch(`http://127.0.0.1:8081/google_callback?code=${code}&state=${state}`);
-						const data = await response.json();
-	
-						if (data.token) {
-							// Store the token in session storage
-							sessionStorage.setItem('authToken', data.token);
-	
-							// Redirect to protected page
-							window.location.href = 'http://127.0.0.1:8080/customer.html';
-						} else {
-							console.error('Token not found in response:', data);
-						}
-					} catch (error) {
-						console.error('Failed to fetch token:', error);
-					}
-				}
-			});
+							try {
+								const response = await fetch('http://127.0.0.1:8080/google_callback?code=' + code + '&state=' + state);
+										//     method: 'GET',
+										//     headers: {
+										//         'Content-Type': 'application/json'
+										//     },
+										// });
+								const data = await response.json();
+								console.log(data.token);
+			
+								if (data.token) {
+									
+									localStorage.setItem('token', data.token);
+			
+									//Redirect to protected page
+								   window.location.href = 'http://127.0.0.1:5501/frontend/customer.html';
+								} else {
+									console.error('Token not found in response:', data);
+								}
+							} catch (error) {
+								console.error('Failed to fetch token:', error);
+							}
+						// }
+					});
+//f
+
+function togglePasswordVisibility(passwordFieldId) {
+	const passwordField = document.getElementById('logPassword');
+	const eyeIcon = document.querySelector(`#${passwordFieldId} ~ .toggle-password > svg`);
+
+	if (passwordField.type === 'password') {
+		passwordField.type = 'text';
+		eyeIcon.classList.remove('bi-eye');
+		eyeIcon.classList.add('bi-eye-slash');
+	} else {
+		passwordField.type = 'password';
+		eyeIcon.classList.remove('bi-eye-slash');
+		eyeIcon.classList.add('bi-eye');
+	}
+}
+
+			
 
 
 

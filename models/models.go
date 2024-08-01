@@ -25,7 +25,6 @@ type UserProfile struct {
     Password       string `json:"password"`
     City           string `json:"city"`
     Role           string `json:"role"`
-    BusinessLicense string `json:"business_license"`
 }
 
 type Admin struct {

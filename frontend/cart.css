@@ -10,7 +10,8 @@
     margin-bottom: 15px;
     border-radius: 5px;
     background-color:rgb(241, 223, 201);
-    box-shadow: 2px 2px 10px rgb(0, 0, 0, 0.1);}
+    box-shadow: 2px 2px 10px rgb(0, 0, 0, 0.1);
+}
 
 .cart-item h3 {
     margin-top: 0;
@@ -180,4 +181,24 @@ h4 {
 
 .navbar-links a:hover {
     color: #f27e3b;
+}
+
+.order {
+    border: none;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    background-color:rgb(241, 223, 201);
+    box-shadow: 2px 2px 10px rgb(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.cancelorder {
+    height: 30px;
+    width: 100px;
+    background-color: #f9b197;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgb(0, 0, 0, 0.1);
+    color: white;
 }

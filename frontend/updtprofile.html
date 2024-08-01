@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #efebe0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: rgb(231, 218, 203);
+            padding: 50px;
+            border-radius: 50px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 50vh;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, select {
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            font-size: 16px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #d47f60;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #f27e3b;
+        }
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Update Profile</h1>
+        <form id="updateProfileForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password">
+
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city">
+
+            <label for="role">Role:</label>
+            <select id="role" name="role">
+                <option value="customer">Customer</option>
+                <option value="admin">Admin</option>
+            </select>
+
+            <label for="preferences">Preferences:</label>
+            <input type="text" id="preferences" name="preferences">
+
+            <button type="submit">Update Profile</button>
+        </form>
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('updateProfileForm');
+            const messageDiv = document.getElementById('message');
+
+            // Fetch current user data and populate the form
+            fetchUserData();
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                updateProfile();
+            });
+
+            function fetchUserData() {
+                const userId = localStorage.getItem('userId');
+                const token = localStorage.getItem('token');
+
+                fetch(`http://127.0.0.1:8080/profile/${userId}/details`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('name').value = data.name || '';
+                    document.getElementById('email').value = data.email || '';
+                    document.getElementById('city').value = data.city || '';
+                    document.getElementById('role').value = data.role || 'customer';
+                    document.getElementById('preferences').value = data.preferences || '';
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                    showMessage('Error fetching user data', false);
+                });
+            }
+
+            function updateProfile() {
+                const userId = localStorage.getItem('userId');
+                const token = localStorage.getItem('token');
+
+                const formData = new FormData(form);
+                const userData = Object.fromEntries(formData.entries());
+
+                fetch(`http://127.0.0.1:8080/profile/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(userData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showMessage(data.message, true);
+                    } else {
+                        showMessage(data.error || 'Update failed', false);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showMessage('An error occurred', false);
+                });
+            }
+
+            function showMessage(message, isSuccess) {
+                messageDiv.textContent = message;
+                messageDiv.className = `message ${isSuccess ? 'success' : 'error'}`;
+            }
+        });
+    </script>
+</body>
+</html>

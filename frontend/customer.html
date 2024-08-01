@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foodium Navbar</title>
-    <link rel="stylesheet" href="customer.css">
+    <link rel="stylesheet" href="customer.css">     
 </head>
 <body>
     <div id="alert" class="alert alert-success" role="alert">
@@ -33,6 +33,8 @@
         <div class="user-category">
             <h3>Profile Information</h3>
             <p id="profile-info"></p>
+            <button id="update-profile-butn">Update Profile</button>
+
         </div>
         <div class="user-category">
             <h3>Order History</h3>
@@ -70,8 +72,36 @@
             </div>
         </footer>
     
-    
 
+
+    <script>        
+
+    function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+const token = getCookie('token');
+
+    // Token exists, proceed with loading the protected content
+    console.log('User is authenticated with token:', token);
+
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    localStorage.setItem('token', token);
+    localStorage.setItem('userId', payload.ID);
+    localStorage.setItem('userEmail', payload.email);
+    localStorage.setItem('userName', payload.name);
+
+
+    </script>
+    <script>
+        // JavaScript function to handle the button click and redirect
+        document.getElementById("update-profile-butn").addEventListener("click", function() {
+            window.location.href = "updtprofile.html"; // Replace with the URL of the page you want to redirect to
+        });
+    </script>
     <script src="customer.js"></script>
 </body>
 </html>

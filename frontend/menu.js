@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 
-function createMenuItemElement(item) {
+  function createMenuItemElement(item) {
     const itemElement = document.createElement("div");
     itemElement.classList.add("menu-item");
 
@@ -80,7 +80,7 @@ function createMenuItemElement(item) {
     textContainer.appendChild(itemDescription);
 
     const itemPrice = document.createElement("p");
-    itemPrice.textContent = `Price: $${item.price.toFixed(2)}`;
+    itemPrice.textContent = `Price: ₹${item.price.toFixed(2)}`;
     textContainer.appendChild(itemPrice);
 
     itemElement.appendChild(textContainer);
@@ -114,66 +114,66 @@ function createMenuItemElement(item) {
     document.body.appendChild(detailsElement);
 }*/
 
-function showItemDetails(item) {
-    const overlay = document.createElement("div");
-    overlay.classList.add("modal-overlay");
+        function showItemDetails(item) {
+            const overlay = document.createElement("div");
+            overlay.classList.add("modal-overlay");
 
-    const detailsElement = document.createElement("div");
-    detailsElement.classList.add("item-details-modal");
+            const detailsElement = document.createElement("div");
+            detailsElement.classList.add("item-details-modal");
 
-    detailsElement.innerHTML = `
-        <button class="close-modal">&times;</button>
-        <h2>${item.name}</h2>
-        <img src="${item.imageUrl}" alt="${item.name}">
-        <p>${item.description}</p>
-        <p>Price: $${item.price.toFixed(2)}</p>
-        <p>Tags: ${item.tags}</p>
-        <div class="quantity-control">
-            <button class="decrease">-</button>
-            <input type="number" value="1" min="1" class="quantity-input">
-            <button class="increase">+</button>
-        </div>
-        <button class="add-to-cart">Add to Cart</button>
-    `;
+            detailsElement.innerHTML = `
+                <button class="close-modal">&times;</button>
+                <h2>${item.name}</h2>
+                <img src="${item.imageUrl}" alt="${item.name}">
+                <p>${item.description}</p>
+                <p>Price: ₹${item.price.toFixed(2)}</p>
+                <p>Tags: ${item.tags}</p>
+                <div class="quantity-control">
+                    <button class="decrease">-</button>
+                    <input type="number" value="1" min="1" class="quantity-input">
+                    <button class="increase">+</button>
+                </div>
+                <button class="add-to-cart">Add to Cart</button>
+            `;
 
-    overlay.appendChild(detailsElement);
-    document.body.appendChild(overlay);
+            overlay.appendChild(detailsElement);
+            document.body.appendChild(overlay);
 
-    // Close modal when clicking outside or on close button
-    overlay.addEventListener("click", (e) => {
-        if (e.target === overlay || e.target.classList.contains("close-modal")) {
-            document.body.removeChild(overlay);
-        }
-    });
+            // Close modal when clicking outside or on close button
+            overlay.addEventListener("click", (e) => {
+                if (e.target === overlay || e.target.classList.contains("close-modal")) {
+                    document.body.removeChild(overlay);
+                }
+            });
 
-    // Add event listeners for quantity control and add to cart
-    const decreaseBtn = detailsElement.querySelector(".decrease");
-    const increaseBtn = detailsElement.querySelector(".increase");
-    const quantityInput = detailsElement.querySelector(".quantity-input");
-    const addToCartBtn = detailsElement.querySelector(".add-to-cart");
+        // Add event listeners for quantity control and add to cart
+        const decreaseBtn = detailsElement.querySelector(".decrease");
+        const increaseBtn = detailsElement.querySelector(".increase");
+        const quantityInput = detailsElement.querySelector(".quantity-input");
+        const addToCartBtn = detailsElement.querySelector(".add-to-cart");
 
-    decreaseBtn.addEventListener("click", () => {
-        if (quantityInput.value > 1) {
-            quantityInput.value = parseInt(quantityInput.value) - 1;
-        }
-    });
+        decreaseBtn.addEventListener("click", () => {
+            if (quantityInput.value > 1) {
+                quantityInput.value = parseInt(quantityInput.value) - 1;
+            }
+        });
 
-    increaseBtn.addEventListener("click", () => {
-        quantityInput.value = parseInt(quantityInput.value) + 1;
-    });
+        increaseBtn.addEventListener("click", () => {
+            quantityInput.value = parseInt(quantityInput.value) + 1;
+        });
 
-    addToCartBtn.addEventListener("click", async () => {
-        const quantity = parseInt(quantityInput.value);
-        try {
-            await upsertCartItem(item.item_id, quantity);
-            // Success handling (e.g., close modal, update UI)
-            document.body.removeChild(overlay);
-        } catch (error) {
-            console.error("Failed to add to cart:", error);
-            // Error handling (e.g., show error message to user)
-        }
-    });
-}
+        addToCartBtn.addEventListener("click", async () => {
+            const quantity = parseInt(quantityInput.value);
+            try {
+                await upsertCartItem(item.item_id, quantity);
+                // Success handling (e.g., close modal, update UI)
+                document.body.removeChild(overlay);
+            } catch (error) {
+                console.error("Failed to add to cart:", error);
+                // Error handling (e.g., show error message to user)
+            }
+        });
+    }
 
 
 async function upsertCartItem(itemId, quantity) {
@@ -232,5 +232,45 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = 'homepage.html'; // Replace with your homepage URL
     }
 });
+
+
+
+
+async function fetchMenuItemsByTag(partialTag) {
+    try {
+        const response = await fetch(`http://127.0.0.1:8080/menu/search?tag=${encodeURIComponent(partialTag)}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching menu items:', error);
+        return [];
+    }
+}
+
+function populateCategory(categoryId, items) {
+    const container = document.getElementById(categoryId);
+    container.innerHTML = ''; // Clear existing items
+    items.forEach(item => {
+        const itemElement = createMenuItemElement(item);
+        container.appendChild(itemElement);
+    });
+}
+
+
+
+async function initializeMenu() {
+    // Fetch and populate starters (assuming 'starter' is a tag)
+    const starters = await fetchMenuItemsByTag('starter');
+    populateCategory('starters', starters);
+
+    // Fetch and populate desserts (assuming 'dessert' is a tag)
+    const desserts = await fetchMenuItemsByTag('dessert');
+    populateCategory('desserts', desserts);     
+}
+
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', initializeMenu);
 
 

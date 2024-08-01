@@ -135,16 +135,10 @@ function displayOrderHistory(orders) {
         const orderElement = document.createElement('div');
         orderElement.className = 'order';
         orderElement.innerHTML = `
-            <h3>Order ID: ${order.ID}</h3>
-            <p>Status: ${order.status || 'N/A'}</p>
-            <p>Total Amount: ${order.total_amount ? '$' + order.total_amount.toFixed(2) : 'N/A'}</p>
-            <h4>Items:</h4>
-            <ul>
-                ${(order.OrderItems || []).map(item => `
-                    <li>Item ID: ${item.item_id}, Quantity: ${item.quantity}</li>
-                `).join('')}
-            </ul>
-            <button onclick="cancelOrder(${order.user_id}, ${order.ID})">Cancel Order</button>
+            <h3>Order ID: ${order.ID}</h3><br>
+            <p>Status: ${order.status || 'N/A'}</p><br>
+            <p>Total Amount: ${order.total_amount ? '$' + order.total_amount.toFixed(2) : 'N/A'}</p><br>
+            <button class="cancelorder" onclick="cancelOrder(${order.user_id}, ${order.ID})">Cancel Order</button>
         `;
         orderHistoryContainer.appendChild(orderElement);
     });

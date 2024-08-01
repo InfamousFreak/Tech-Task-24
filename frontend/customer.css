@@ -204,7 +204,7 @@ h4 {
     background-color: #f9f9f9;
     border-radius: 15px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    height: 230px;
+    height: 40vh;
     width: 700px;
     margin-left: 580px;
 }
@@ -212,7 +212,6 @@ h4 {
 #search-results h2 {
     color: #333;
     margin-bottom: 15px;
-
 }
 
 #search-results:not(.hidden) {
@@ -226,13 +225,11 @@ h4 {
 
 #results-list li {
     margin-bottom: 20px;
-    border: solid 1px rgb(184, 184, 184);
+    border: none;
     font-size:20px;
-    padding: 15px;
+    padding: 5px;
     width:660px;
-    height:60px;
-    border-radius:15px;
-
+    height:20px;
 }
 
 #results-list a {
@@ -368,3 +365,35 @@ h4 {
       opacity: 1;
     }
   }
+
+#update-profile-butn {
+    height:40px;
+    width: 200px;
+    background-color:#f27e3b;
+    border-radius:20px;
+    color:#EFEBE0;
+    border:none;
+    font-size:18px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    margin-left: 740px;
+}
+
+.cancelorder {
+    height: 30px;
+    width: 100px;
+    background-color: #f2b9a4;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgb(0, 0, 0, 0.1);
+    color: white;
+}
+
+.order {
+    border: none;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    background-color:rgb(241, 223, 201);
+    box-shadow: 2px 2px 10px rgb(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
