@@ -67,7 +67,7 @@ signupbtn.addEventListener('click', async function(event) {
 	}
 
 	try {
-		const response = await fetch('https://tech-task-24-latest-1.onrender.com/profile/create', {
+		const response = await fetch('https://tech-task-24-latest.onrender.com/profile/create', {
 			method: 'POST',
 			headers: {
 				'Content-type': 'application/json'
@@ -105,7 +105,7 @@ signupbtn.addEventListener('click', async function(event) {
 		const password = document.getElementById('logPassword').value;
 	  
 		try {
-		  const response = await fetch('https://tech-task-24-latest-1.onrender.com/login', {
+		  const response = await fetch('https://tech-task-24-latest.onrender.com/login', {
 			method: 'POST',
 			headers: {
 			  'Content-Type': 'application/json',
@@ -159,12 +159,12 @@ signupbtn.addEventListener('click', async function(event) {
 
 			document.getElementById('google-authBtn').addEventListener('click', async function(event) {
 				event.preventDefault();
-				window.location.href = 'https://tech-task-24-latest-1.onrender.com/google_login'; 
+				window.location.href = 'https://tech-task-24-latest.onrender.com/google_login'; 
 				const params = new URLSearchParams(window.location.search);
 				const code = params.get('code');
 				const state = params.get('state');
 							try {
-								const response = await fetch('https://tech-task-24-latest-1.onrender.com/google_callback?code=' + code + '&state=' + state);
+								const response = await fetch('https://tech-task-24-latest.onrender.com/google_callback?code=' + code + '&state=' + state);
 										//     method: 'GET',
 										//     headers: {
 										//         'Content-Type': 'application/json'
