@@ -25,7 +25,7 @@ func main() {
 
 	app.Use(cors.New(cors.Config{
         AllowCredentials: true,
-        AllowOrigins: "https://tech-task-24.onrender.com/", 
+		AllowOrigins: "*",
 		AllowMethods: "GET,POST,PUT,DELETE",
         AllowHeaders: "Origin, Content-Type, Accept, Authorization",
     }))

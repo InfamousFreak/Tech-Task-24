@@ -22,11 +22,17 @@ FROM alpine:latest
 # Install CA certificates
 RUN apk --no-cache add ca-certificates
 
+# Create a directory for your app
+WORKDIR /app
+
 # Copy the built Go app from the build stage
 COPY --from=builder /go/bin/app .bin//app
 
 # Copy the .env file
 COPY .env .env
+
+# Copy the frontend files to serve static files
+COPY frontend ./frontend
 
 # Set the entry point to run the app
 ENTRYPOINT [".bin/app"]

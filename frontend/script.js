@@ -67,7 +67,7 @@ signupbtn.addEventListener('click', async function(event) {
 	}
 
 	try {
-		const response = await fetch('http://127.0.0.1:8080/profile/create', {
+		const response = await fetch('https://tech-task-24-latest-1.onrender.com/profile/create', {
 			method: 'POST',
 			headers: {
 				'Content-type': 'application/json'
@@ -147,7 +147,7 @@ signupbtn.addEventListener('click', async function(event) {
 						sessionStorage.setItem('authToken', data.token);
 	
 						// Redirect to protected page
-						window.location.href = 'http://127.0.0.1:8080/customer.html';
+						window.location.href = 'https://tech-task-24-latest-1.onrender.com/customer.html';
 					} else {
 						console.error('Token not found in response:', data);
 					}
@@ -159,12 +159,12 @@ signupbtn.addEventListener('click', async function(event) {
 
 			document.getElementById('google-authBtn').addEventListener('click', async function(event) {
 				event.preventDefault();
-				window.location.href = 'http://127.0.0.1:8080/google_login'; 
+				window.location.href = 'https://tech-task-24-latest-1.onrender.com/google_login'; 
 				const params = new URLSearchParams(window.location.search);
 				const code = params.get('code');
 				const state = params.get('state');
 							try {
-								const response = await fetch('http://127.0.0.1:8080/google_callback?code=' + code + '&state=' + state);
+								const response = await fetch('https://tech-task-24-latest-1.onrender.com/google_callback?code=' + code + '&state=' + state);
 										//     method: 'GET',
 										//     headers: {
 										//         'Content-Type': 'application/json'

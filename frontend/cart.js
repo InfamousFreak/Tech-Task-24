@@ -10,7 +10,7 @@ function fetchCartItems() {
         return;
     }
 
-    fetch(`http://127.0.0.1:8080/cart/${userId}`)
+    fetch(`https://tech-task-24-latest-1.onrender.com/cart/${userId}`)
         .then(response => response.json())
         .then(data => {
             displayCartItems(data);
@@ -60,7 +60,7 @@ function deleteCartItem(itemId) {
         return;
     }
 
-    fetch('http://127.0.0.1:8080/cart/delete', {
+    fetch('https://tech-task-24-latest-1.onrender.com/cart/delete', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function getOrderHistory(userId) {
-    fetch(`http://127.0.0.1:8080/order/history/${userId}`, {
+    fetch(`https://tech-task-24-latest-1.onrender.com/order/history/${userId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -170,7 +170,7 @@ async function placeOrder(userId) {
 
 async function cancelOrder(userId, orderId) {
     try {
-        const response = await fetch('http://127.0.0.1:8080/cancel', {
+        const response = await fetch('https://tech-task-24-latest-1.onrender.com/cancel', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
