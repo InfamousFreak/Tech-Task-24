@@ -74,33 +74,54 @@
     
 
 
-    <script>        
-
+</div>                
+<script>
     function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-}
-
-const token = getCookie('token');
-
-    // Token exists, proceed with loading the protected content
-    console.log('User is authenticated with token:', token);
-
-
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    localStorage.setItem('token', token);
-    localStorage.setItem('userId', payload.ID);
-    localStorage.setItem('userEmail', payload.email);
-    localStorage.setItem('userName', payload.name);
-
-
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    
+    function handleAuthentication() {
+        let token = getCookie('token');
+        let isGoogleLogin = false;
+    
+        if (token) {
+            isGoogleLogin = true;
+            console.log('User is authenticated with Google. Token:', token);
+        } else {
+            token = localStorage.getItem('token');
+            if (token) {
+                console.log('User is authenticated manually. Token:', token);
+            } else {
+                console.log('User is not authenticated');
+                return; 
+            }
+        }
+    
+        const payload = JSON.parse(atob(token.split('.')[1]));
+    
+        
+        localStorage.setItem('token', token);
+        localStorage.setItem('userId', payload.ID);
+        localStorage.setItem('userEmail', payload.email);
+        localStorage.setItem('userName', payload.name);
+    
+        if (isGoogleLogin) {
+            console.log('Processed Google login');
+        } else {
+            console.log('Processed manual login');
+        }
+    }
+    
+    handleAuthentication();
     </script>
+    
     <script>
-        // JavaScript function to handle the button click and redirect
-        document.getElementById("update-profile-butn").addEventListener("click", function() {
-            window.location.href = "updtprofile.html"; // Replace with the URL of the page you want to redirect to
-        });
+    // JavaScript function to handle the button click and redirect
+    document.getElementById("update-profile-butn").addEventListener("click", function() {
+        window.location.href = "updtprofile.html"; // Replace with the URL of the page you want to redirect to
+    });
     </script>
     <script src="customer.js"></script>
 </body>
