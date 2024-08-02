@@ -31,7 +31,7 @@ function isLoggedIn() {
 
                 const payload = JSON.parse(atob(token.split('.')[1]));
                 const userId = payload.ID; // Assuming the ID is stored in the token payload
-                const response = await fetch(`https://tech-task-24-latest-1.onrender.com/profile/${userId}/details`, {
+                const response = await fetch(`https://tech-task-24-latest.onrender.com/profile/${userId}/details`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -66,7 +66,7 @@ function isLoggedIn() {
         const searchTerm = searchInput.value.trim();
         if (searchTerm) {
             const token = localStorage.getItem('token');
-            fetch(`https://tech-task-24-latest-1.onrender.com/menu/search?tag=${encodeURIComponent(searchTerm)}`, {
+            fetch(`https://tech-task-24-latest.onrender.com/menu/search?tag=${encodeURIComponent(searchTerm)}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function getOrderHistory(userId) {
-    fetch(`https://tech-task-24-latest-1.onrender.com/order/history/${userId}`, {
+    fetch(`https://tech-task-24-latest.onrender.com/order/history/${userId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function fetchUserProfiles() {
     try {
-        const response = await fetch('https://tech-task-24-latest-1.onrender.com/profile/show', {
+        const response = await fetch('https://tech-task-24-latest.onrender.com/profile/show', {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
@@ -76,7 +76,7 @@ async function deleteUserProfile(userId) {
     }
 
     try {
-        const response = await fetch(`https://tech-task-24-latest-1.onrender.com/profile/${userId}`, {
+        const response = await fetch(`https://tech-task-24-latest.onrender.com/profile/${userId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
@@ -105,7 +105,7 @@ function fetchCartItems(userId) {
         return;
     }
 
-    fetch(`https://tech-task-24-latest-1.onrender.com/cart/${userId}`)
+    fetch(`https://tech-task-24-latest.onrender.com/cart/${userId}`)
         .then(response => response.json())
         .then(data => {
             displayCartItems(data, userId);
@@ -154,7 +154,7 @@ function deleteCartItem(userId, itemId) {
         return;
     }
 
-    fetch('https://tech-task-24-latest-1.onrender.com/admin/cart', {
+    fetch('https://tech-task-24-latest.onrender.com/admin/cart', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

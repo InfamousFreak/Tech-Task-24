@@ -1,6 +1,6 @@
 /*document.addEventListener("DOMContentLoaded", async () => {
     try {
-        const response = await fetch("https://tech-task-24-latest-1.onrender.com/menu/get");
+        const response = await fetch("https://tech-task-24-latest.onrender.com/menu/get");
         if (!response.ok) {
             throw new Error("Failed to fetch menu items");
         }
@@ -34,7 +34,7 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
-        const response = await fetch("https://tech-task-24-latest-1.onrender.com/menu/get");
+        const response = await fetch("https://tech-task-24-latest.onrender.com/menu/get");
         if (!response.ok) {
             throw new Error("Failed to fetch menu items");
 
@@ -183,7 +183,7 @@ async function upsertCartItem(itemId, quantity) {
             throw new Error("User not logged in");
         }
 
-        const response = await fetch("https://tech-task-24-latest-1.onrender.com/cart/upsert", {
+        const response = await fetch("https://tech-task-24-latest.onrender.com/cart/upsert", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -238,7 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function fetchMenuItemsByTag(partialTag) {
     try {
-        const response = await fetch(`https://tech-task-24-latest-1.onrender.com/menu/search?tag=${encodeURIComponent(partialTag)}`);
+        const response = await fetch(`https://tech-task-24-latest.onrender.com/menu/search?tag=${encodeURIComponent(partialTag)}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }

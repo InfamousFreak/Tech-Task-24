@@ -23,7 +23,7 @@ async function handleAdminLoginSubmit(event) {
     }
 
     try {
-        const response = await fetch('https://tech-task-24-latest-1.onrender.com/admin/login', {
+        const response = await fetch('https://tech-task-24-latest.onrender.com/admin/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ async function handleAdminSignupSubmit(event) {
     }
 
     try {
-        const response = await fetch('https://tech-task-24-latest-1.onrender.com/admin/signup', {
+        const response = await fetch('https://tech-task-24-latest.onrender.com/admin/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -105,7 +105,7 @@ signupbtn.addEventListener('click', async function(event) {
 		const password = document.getElementById('logPassword').value;
 	  
 		try {
-		  const response = await fetch('http://localhost:8080/login', {
+		  const response = await fetch('https://tech-task-24-latest-1.onrender.com/login', {
 			method: 'POST',
 			headers: {
 			  'Content-Type': 'application/json',

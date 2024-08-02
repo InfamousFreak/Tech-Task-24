@@ -24,12 +24,11 @@ func main() {
 	})
 
 	app.Use(cors.New(cors.Config{
-        AllowCredentials: true,
 		AllowOrigins: "*",
 		AllowMethods: "GET,POST,PUT,DELETE",
         AllowHeaders: "Origin, Content-Type, Accept, Authorization",
     }))
-	app.Static("/", "./frontend")
+	app.Static("/", "/frontend")
 
 	jwt := middlewares.AuthMiddleware()
 	config.GoogleConfig()
