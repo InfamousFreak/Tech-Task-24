@@ -74,7 +74,7 @@ go get golang.org/x/oauth2/google
 
 ### **5. Clone the Repository & Setup Backend**
 ```sh
-git clone https://github.com/yourusername/food_delivery.git
+git clone https://github.com/InfamousFreak/Tech-Task-24.git
 cd food_delivery
 ```
 - **Create a `.env` file** with:
