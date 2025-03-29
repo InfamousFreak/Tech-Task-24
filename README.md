@@ -122,18 +122,3 @@ cd food_delivery
 | GET    | `/api/menu` | Fetch menu items |
 | POST   | `/api/cart/add` | Add item to cart |
 | POST   | `/api/order/place` | Place order |
-
-## To-Do (Future Enhancements)
-- WebSockets for live updates
-- Real-time order tracking
-- Deploying to cloud (Render, AWS, or DigitalOcean)
-
----
-## Contributors
-- **Your Name** - [GitHub](https://github.com/InfamousFreak)
-
----
-## License
-MIT License
-make this the requested format 
-
